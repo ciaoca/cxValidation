@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cxValidation 移动端表单验证 &raquo; 在线演示 - 前端开发仓库</title>
+<style>
+body{background:#ddd;font:14px/1.7 tahoma,'\5fae\8f6f\96c5\9ed1',sans-serif;}
+h1,h2,h3{font-size:36px;line-height:1;}
+h2{font-size:24px;}
+h3{font-size:18px;}
+fieldset{margin:2em 0;}
+fieldset legend{font-weight:bold;font-size:16px;line-height:2;}
+a{color:#06f;text-decoration:none;}
+a:hover{color:#00f;}
+
+.wrap{width:800px;margin:0 auto;padding:20px 40px;border-radius:8px;background:#fff;box-shadow:0 0 10px rgba(0,0,0,0.5);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>cxValidation 移动端表单验证</h1>
+
+  <h2>示例</h2>
+  <form action="?" method="get" id="test_form" class="form">
+    <fieldset id="city_china">
+      <legend>required</legend>
+      <dl>
+        <dt>用户名</dt>
+        <dd><input type="text" class="input" size="30" data-validation="required"></dd>
+      </dl>
+      <dl>
+        <dt>密码</dt>
+        <dd><input type="password" class="input" size="30" data-validation="required"></dd>
+      </dl>
+      <dl>
+        <dt>性别</dt>
+        <dd class="note">
+          <input type="radio" id="sex_male" class="radio" size="30" data-validation="required">
+          <label for="sex_male">男</label>
+          <input type="radio" id="sex_female" class="radio" size="30">
+          <label for="sex_female">女</label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>爱好</dt>
+        <dd class="note">
+          <input type="checkbox" id="sex_male" class="checkbox" size="30" data-validation="required">
+          <label for="sex_male">旅游</label>
+          <input type="checkbox" id="sex_female" class="checkbox" size="30">
+          <label for="sex_female">看书</label>
+          <input type="checkbox" id="sex_female" class="checkbox" size="30">
+          <label for="sex_female">游戏</label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>婚否</dt>
+        <dd>
+          <select class="select" data-validation="required">
+            <option value="">请选择</option>
+            <option value="0">未婚</option>
+            <option value="1">已婚</option>
+          </select>
+        </dd>
+      </dl>
+      <dl>
+        <dt>自我介绍</dt>
+        <dd>
+          <textarea class="input" data-validation="required" rows="3" cols="30"></textarea>
+        </dd>
+      </dl>
+    </fieldset>
+
+    <fieldset>
+      <legend>minSize[int], maxSize[int]</legend>
+      <div>
+        <input type="text" class="input" size="30" placeholder="最少3个字符" data-validation="minSize[3]">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="最多10个字符" data-validation="maxSize[10]">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>min[int], max[int]</legend>
+      <div>
+        <input type="text" class="input" size="30" placeholder="数值最小为3" data-validation="min[3]">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="数值最大为10" data-validation="max[10]">
+      </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>integer, number</legend>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入整数" data-validation="integer">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入数值" data-validation="number">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>only</legend>
+      <h4>onlyNumber</h4>
+      <div>
+        <input type="text" class="input" size="30" placeholder="只能输入数字（0-9）" data-validation="onlyNumber">
+      </div>
+      <h4>onlyNumberSp</h4>
+      <div>
+        <input type="text" class="input" size="30" placeholder="只能输入数字和空格" data-validation="onlyNumberSp">
+      </div>
+      <h4>onlyLetter</h4>
+      <div>
+        <input type="text" class="input" size="30" placeholder="只能输入英文字母" data-validation="onlyLetter">
+      </div>
+      <h4>onlyLetterSp</h4>
+      <div>
+        <input type="text" class="input" size="30" placeholder="只能输入英文字母和空格" data-validation="onlyLetterSp">
+      </div>
+      <h4>onlyLetterNumber</h4>
+      <div>
+        <input type="text" class="input" size="30" placeholder="只能输入英文字母和数字" data-validation="onlyLetterNumber">
+      </div>
+      <h4>onlyLetterNumberSp</h4>
+      <div>
+        <input type="text" class="input" size="30" placeholder="只能输入英文字母、数字、空格" data-validation="onlyLetterNumberSp">
+      </div>
+    </fieldset>
+    
+    <fieldset>
+      <legend>email, phone, url</legend>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入电子邮件" data-validation="email">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入电话号码" data-validation="phone">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入网址" data-validation="url">
+      </div>
+    </fieldset>
+    
+    <fieldset>
+      <legend>chinese, chinaId, chinaIdLoose</legend>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入中文" data-validation="chinese">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入身份证号码" data-validation="chinaId">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入身份证号码（兼容旧15位）" data-validation="chinaIdLoose">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>chinaZip, qq</legend>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入邮政编码" data-validation="chinaZip">
+      </div>
+      <div>
+        <input type="text" class="input" size="30" placeholder="输入QQ号码" data-validation="qq">
+      </div>
+    </fieldset>
+
+    <button type="submit" class="button blue">验证表单</button>
+  </form>
+
+  <h2>文档</h2>
+  <ul>
+    <li><a target="_blank" href="https://github.com/ciaoca/cxValidation">Github</a></li>
+    <li><a target="_blank" href="http://code.ciaoca.com/javascript/cxValidation/">中文文档</a></li>
+  </ul>
+  
+  <h2>作者</h2>
+  <p><a target="_blank" href="http://ciaoca.com/">http://ciaoca.com/</a></p>
+  <p>Released under the MIT license</p>
+</div>
+
+<script src="http://cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script src="js/cxvalidation.js"></script>
+<script>
+cxValidation.attach(document.getElementById('test_form'));
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+/**
+ * cxValidation
+ * ------------------------------ */
+.cxvalidation_tip{box-sizing:border-box;position:fixed;top:0;left:0;width:100%;padding:0.5em 1em;background-color:rgba(100,0,0,0.8);color:#fff;z-index:999;
+-webkit-transform:translate(0,-100%);
+transform:translate(0,-100%);
+transition-property:-webkit-transform;
+transition-property:transform;
+transition-property:transform, -webkit-transform;
+transition-duration:0.2s;
+}
+.cxvalidation_tip.show{
+-webkit-transform:translate(0,0);
+transform:translate(0,0);
+}
