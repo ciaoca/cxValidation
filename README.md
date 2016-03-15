@@ -5,9 +5,13 @@
 * Zepto v1.0+ | jQuery v1.7+
 * cxValidation 0.5
 
-文档：http://code.ciaoca.com/jquery/cxValidation/
+文档：http://code.ciaoca.com/javascript/cxValidation/
 
-示例：http://code.ciaoca.com/jquery/cxValidation/demo/
+示例：http://code.ciaoca.com/javascript/cxValidation/demo/
+
+**Future:**
+* 日期验证规则
+* 完全支持原生 JavaScript，不再依赖 jQuery 或 Zepto
 
 ##使用方法
 ###载入 CSS 文件
