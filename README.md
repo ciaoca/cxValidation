@@ -81,9 +81,55 @@ message | string | 提示消息
 rule | string | 验证未通过的的规则名称
 element | DOM Element | 验证未通过的元素
 
+
+  
+##验证规则
+验证规则放置在```input```的```data-validation```属性中，如使用多个规则，用```,```分割
+
+```html
+<input data-validation="required">
+<input data-validation="required,integer">
+<input data-validation="required,integer,min[3]">
+```
+
+名称 | 说明
+--- | ---
+required | 必填、必选
+groupRequired[name][min] | 群组必填<br>name: 群组名称<br>min: 最少填写/选择数量，默认值为 1
+condRequired[id] | 依赖必填<br>id: 控件 id（如依赖多个输入控件，用英文逗号分隔）
+equals[id] | 相等验证<br>id: 控件 id
+minSize[int] | 最少字符数限制
+maxSize[int] | 最多字符数限制
+min[int] | 最小数值限制
+max[int] | 最大数值限制
+integer | 验证整数
+number | 验证数值（正负数、浮点数）
+onlyNumber | 只能填写数字
+onlyNumberSp | 只能填写英文字母
+onlyLetterSp | 只能填写英文字母和空格
+onlyLetterNumber | 只能填写英文字母与数字
+onlyLetterNumberSp | 只能填写英文字母、数字、空格
+email | 验证电子邮件地址
+phone | 验证电话号码
+url | 验证网址
+chinese | 只能填写中文汉字
+chinaId | 验证身份证号码（仅支持 18 位）
+chinaIdLoose | 验证身份证号码（兼容 18 和 15 位）
+chinaZip | 验证邮政编码
+qq | 验证 QQ 号码
+call[functionName] | 调用外部函数验证
+  
+##Data 属性
+```html
+<input data-validation="required" validation-message="该项为必填">
+```
+名称 | 说明
+--- | ---
+validation | 验证规则
+validation-message | 验证提示消息
+
 ##API 方法
 名称 | 示例 | 说明
 --- | ---| ---
 attach | cxValidation.attach(document.getElementById('form_id'), options) | 绑定表单验证
 detach | cxValidation.detach(document.getElementById('form_id')) | 解除表单验证
-
