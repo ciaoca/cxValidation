@@ -121,7 +121,7 @@ call[functionName] | 调用外部函数验证
   
 ##Data 属性
 ```html
-<input data-validation="required" validation-message="该项为必填">
+<input data-validation="required" data-validation-message="该项为必填">
 ```
 名称 | 说明
 --- | ---
