@@ -1,8 +1,8 @@
 /*!
  * cxValidation
  * @name cxvalidation.js
- * @version 0.5
- * @date 2016-03-14
+ * @version 0.6
+ * @date 2016-04-08
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
@@ -73,156 +73,167 @@
     }
   };
 
+  // 验证方法
+  validation.validFun = {
+    required: function(el) {
+      if (el.type === 'checkbox' || el.type === 'radio') {
+        return el.checked ? true : false;
+      } else {
+        return el.value.trim().length ? true : false;
+      };
+    },
+    groupRequired: function(el, name, min) {
+      name = String(name);
+      min = parseInt(min, 10);
+
+      if (isNaN(min)) {
+        min = 1;
+      };
+
+      if (typeof validation.groupCache[name] === 'undefined' || typeof validation.groupCache[name].count === 'undefined') {
+        validation.groupCache[name] = {
+          count: min
+        };
+      };
+
+      if (validation.groupCache[name].count > 0) {
+        if (validation.validFun.required(el)) {
+          validation.groupCache[name].count -= 1;
+        } else {
+          if (typeof validation.groupCache[name].element === 'undefined') {
+            validation.groupCache[name].element = el;
+          };
+        };
+      };
+
+      return true;
+    },
+    condRequired: function(el, ids) {
+      var _cond = false;
+      var result = true;
+
+      if (ids.length) {
+        ids = ids.split(',');
+
+        if (Array.isArray(ids) && ids.length) {
+          _cond = true;
+
+          for (var i = 0, l = ids.length; i < l; i++) {
+            if (!validation.validFun.required(document.getElementById(ids[i]))) {
+              _cond = false;
+              break
+            };
+          };
+        };
+
+        if (_cond) {
+          result = validation.validFun.required(el);
+        };
+      }
+
+      return result;
+    },
+    equals: function(el, id) {
+      return el.value == document.getElementById(id).value;
+    },
+    minSize: function(el, int) {
+      return el.value.length && el.value.length >= int;
+    },
+    maxSize: function(el, int) {
+      return el.value.length && el.value.length <= int;
+    },
+    min: function(el, int) {
+      return el.value.length && parseFloat(el.value) >= int;
+    },
+    max: function(el, int) {
+      return el.value.length && parseFloat(el.value) <= int;
+    },
+    integer: function(el) {
+      return el.value.length && /^[\-\+]?\d+$/.test(el.value);
+    },
+    number: function(el) {
+      return el.value.length && /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/.test(el.value);
+    },
+    onlyNumber: function(el) {
+      return el.value.length && /^[0-9]+$/.test(el.value);
+    },
+    onlyNumberSp: function(el) {
+      return el.value.length && /^[0-9\ ]+$/.test(el.value);
+    },
+    onlyLetter: function(el) {
+      return el.value.length && /^[a-zA-Z]+$/.test(el.value);
+    },
+    onlyLetterSp: function(el) {
+      return el.value.length && /^[a-zA-Z\ ]+$/.test(el.value);
+    },
+    onlyLetterNumber: function(el) {
+      return el.value.length && /^[0-9a-zA-Z]+$/.test(el.value);
+    },
+    onlyLetterNumberSp: function(el) {
+      return el.value.length && /^[0-9a-zA-Z\ ]+$/.test(el.value);
+    },
+    email: function(el) {
+      return el.value.length && /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i.test(el.value);
+    },
+    phone: function(el) {
+      return el.value.length && /^([\+][0-9]{1,3}[ \.\-])?([\(]{1}[0-9]{2,6}[\)])?([0-9 \.\-\/]{3,20})((x|ext|extension)[ ]?[0-9]{1,4})?$/.test(el.value);
+    },
+    url: function(el) {
+      return el.value.length && /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(el.value);
+    },
+    chinese: function(el) {
+      return el.value.length && /^[\u4E00-\u9FA5]+$/.test(el.value);
+    },
+    chinaId: function(el) {
+      return el.value.length && /^[1-9]\d{5}[1-9]\d{3}(((0[13578]|1[02])(0[1-9]|[12]\d|3[0-1]))|((0[469]|11)(0[1-9]|[12]\d|30))|(02(0[1-9]|[12]\d)))(\d{4}|\d{3}[xX])$/.test(el.value);
+    },
+    chinaIdLoose: function(el) {
+      return el.value.length && /^(\d{18}|\d{15}|\d{17}[xX])$/.test(el.value);
+    },
+    chinaZip: function(el) {
+      return el.value.length && /^\d{6}$/.test(el.value);
+    },
+    qq: function(el) {
+      return el.value.length && /^[1-9]\d{4,10}$/.test(el.value);
+    },
+    call: function() {
+      var args = Array.prototype.slice.call(arguments);
+      var funName = args.splice(1, 1);
+      var _namespaces;
+      var _scope;
+      var _fun;
+
+      if (funName.indexOf('.') >= 0) {
+        _namespaces = funName.split('.');
+        _scope = window;
+
+        while (_namespaces.length) {
+          _scope = _scope[_namespaces.shift()];
+        };
+        _fun = _scope;
+      } else {
+        _fun = window[funName]
+      };
+
+      return typeof _fun === 'function' ? _fun.apply(_scope, args) : true;
+    }
+  };
+
   validation.init = function() {
     var self = this;
 
     self.groupCache = {};
 
-    // 验证方法
-    self.validFun = {
-      required: function(el) {
-        if (el.type === 'checkbox' || el.type === 'radio') {
-          return el.checked ? true : false;
-        } else {
-          return el.value.trim().length ? true : false;
-        };
-      },
-      groupRequired: function(el, name, min) {
-        name = String(name);
-        min = parseInt(min, 10);
+    self.vid = 1;
+    self.formFuns = {};
 
-        if (isNaN(min)) {
-          min = 1;
-        };
+    self.dom = {};
+    self.dom.tip = document.createElement('div')
+    self.dom.tip.classList.add('cxvalidation_tip');
 
-        if (typeof self.groupCache[name] === 'undefined' || typeof self.groupCache[name].count === 'undefined') {
-          self.groupCache[name] = {
-            count: min
-          };
-        };
-
-        if (self.groupCache[name].count > 0) {
-          if (self.validFun.required(el)) {
-            self.groupCache[name].count -= 1;
-          } else {
-            if (typeof self.groupCache[name].element === 'undefined') {
-              self.groupCache[name].element = el;
-            };
-          };
-        };
-
-        return true;
-      },
-      condRequired: function(el, ids) {
-        var _cond = false;
-        var result = true;
-
-        if (ids.length) {
-          ids = ids.split(',');
-
-          if (Array.isArray(ids) && ids.length) {
-            _cond = true;
-
-            for (var i = 0, l = ids.length; i < l; i++) {
-              if (!self.validFun.required(document.getElementById(ids[i]))) {
-                _cond = false;
-                break
-              };
-            };
-          };
-
-          if (_cond) {
-            result = self.validFun.required(el);
-          };
-        }
-
-        return result;
-      },
-      equals: function(el, id) {
-        return el.value == document.getElementById(id).value;
-      },
-      minSize: function(el, int) {
-        return el.value.length && el.value.length >= int;
-      },
-      maxSize: function(el, int) {
-        return el.value.length && el.value.length <= int;
-      },
-      min: function(el, int) {
-        return el.value.length && parseFloat(el.value) >= int;
-      },
-      max: function(el, int) {
-        return el.value.length && parseFloat(el.value) <= int;
-      },
-      integer: function(el) {
-        return el.value.length && /^[\-\+]?\d+$/.test(el.value);
-      },
-      number: function(el) {
-        return el.value.length && /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/.test(el.value);
-      },
-      onlyNumber: function(el) {
-        return el.value.length && /^[0-9]+$/.test(el.value);
-      },
-      onlyNumberSp: function(el) {
-        return el.value.length && /^[0-9\ ]+$/.test(el.value);
-      },
-      onlyLetter: function(el) {
-        return el.value.length && /^[a-zA-Z]+$/.test(el.value);
-      },
-      onlyLetterSp: function(el) {
-        return el.value.length && /^[a-zA-Z\ ]+$/.test(el.value);
-      },
-      onlyLetterNumber: function(el) {
-        return el.value.length && /^[0-9a-zA-Z]+$/.test(el.value);
-      },
-      onlyLetterNumberSp: function(el) {
-        return el.value.length && /^[0-9a-zA-Z\ ]+$/.test(el.value);
-      },
-      email: function(el) {
-        return el.value.length && /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i.test(el.value);
-      },
-      phone: function(el) {
-        return el.value.length && /^([\+][0-9]{1,3}[ \.\-])?([\(]{1}[0-9]{2,6}[\)])?([0-9 \.\-\/]{3,20})((x|ext|extension)[ ]?[0-9]{1,4})?$/.test(el.value);
-      },
-      url: function(el) {
-        return el.value.length && /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(el.value);
-      },
-      chinese: function(el) {
-        return el.value.length && /^[\u4E00-\u9FA5]+$/.test(el.value);
-      },
-      chinaId: function(el) {
-        return el.value.length && /^[1-9]\d{5}[1-9]\d{3}(((0[13578]|1[02])(0[1-9]|[12]\d|3[0-1]))|((0[469]|11)(0[1-9]|[12]\d|30))|(02(0[1-9]|[12]\d)))(\d{4}|\d{3}[xX])$/.test(el.value);
-      },
-      chinaIdLoose: function(el) {
-        return el.value.length && /^(\d{18}|\d{15}|\d{17}[xX])$/.test(el.value);
-      },
-      chinaZip: function(el) {
-        return el.value.length && /^\d{6}$/.test(el.value);
-      },
-      qq: function(el) {
-        return el.value.length && /^[1-9]\d{4,10}$/.test(el.value);
-      },
-      call: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var funName = args.splice(1, 1);
-        var _namespaces;
-        var _scope;
-        var _fun;
-
-        if (funName.indexOf('.') >= 0) {
-          _namespaces = funName.split('.');
-          _scope = window;
-
-          while (_namespaces.length) {
-            _scope = _scope[_namespaces.shift()];
-          };
-          _fun = _scope;
-        } else {
-          _fun = window[funName]
-        };
-
-        return typeof _fun === 'function' ? _fun.apply(_scope, args) : true;
-      }
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.appendChild(self.dom.tip);
+    });
   };
 
   // 获取验证规则参数
@@ -433,21 +444,67 @@
     return options.type === 'object' ? result : result.status;
   };
 
-  validation.init();
+  // 表单提交方法
+  validation.formSubmitFn = function(form, options) {
+    event.preventDefault();
 
+    var self = this;
+    var _options = {
+      type: 'object',
+      success: function(result) {
+        form.submit();
+      },
+      error: function(result) {
+        if (typeof result.message === 'string' && result.message.length) {
+          if (typeof $.cxDialog === 'function') {
+            $.cxDialog({
+              title: '提示',
+              info: result.message,
+              ok: function() {
+                self.toFocus(result.element);
+              }
+            });
+
+          } else {
+            if (typeof self.closeTipWait !== 'undefined') {
+              clearTimeout(self.closeTipWait);
+            };
+
+            // 在顶部提示，输入框获取焦点时，会被顶起导致看不到提示内容，若不获取焦点又不太明白是哪个输入框的提示
+            self.dom.tip.innerHTML = result.message;
+            self.dom.tip.classList.add('show');
+            self.toFocus(result.element);
+
+            self.closeTipWait = setTimeout(function() {
+              self.dom.tip.classList.remove('show');
+            }, 3000);
+          };
+
+        } else {
+          self.dom.tip.classList.remove('show');
+          self.toFocus(result.element);
+        };
+      }
+    };
+
+    options = $.extend({}, _options, options);
+
+    self.validForm(form, options);
+  };
+
+  // 元素获取焦点
+  validation.toFocus = function(el) {
+    if (this.isVisible(el)) {
+      el.focus();
+    };
+  };
+
+  validation.init();
 
 
   var cxValidation = function(){
     return cxValidation.valid.apply(cxValidation, arguments);
   };
-
-  cxValidation.vid = 1;
-  cxValidation.formFuns = {};
-
-  cxValidation.dom = {};
-  cxValidation.dom.tip = document.createElement('div')
-  cxValidation.dom.tip.classList.add('cxvalidation_tip');
-  document.body.appendChild(cxValidation.dom.tip);
 
   cxValidation.valid = function() {
     var _el;
@@ -494,24 +551,23 @@
       form = form[0];
     };
 
-    if (!validation.isElement(form)) {
+    if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
       return false;
     };
 
     var _name = form.dataset.cxVid;
 
-    if (typeof self.formFuns[_name] === 'function') {
+    if (typeof validation.formFuns[_name] === 'function') {
       return false;
     };
 
-    _name = 'cxValid_' + self.vid;
-    self.vid++;
+    _name = 'cxValid_' + validation.vid;
+    validation.vid++;
 
     form.dataset.cxVid = _name;
-    self.formFuns[_name] = self.formSubmitFn.bind(self, form, options);
+    validation.formFuns[_name] = validation.formSubmitFn.bind(validation, form, options);
 
-    form.addEventListener('submit', self.formFuns[_name]);
-
+    form.addEventListener('submit', validation.formFuns[_name]);
     return true;
   };
 
@@ -523,75 +579,20 @@
       form = form[0];
     };
 
-    if (!validation.isElement(form)) {
+    if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
       return false;
     };
 
     var _name = form.dataset.cxVid;
 
-    if (typeof self.formFuns[_name] !== 'function') {
+    if (typeof validation.formFuns[_name] !== 'function') {
       return false;
     };
 
-    form.removeEventListener('submit', self.formFuns[_name]);
+    form.removeEventListener('submit', validation.formFuns[_name]);
     delete form.dataset.cxVid;
-    delete self.formFuns[_name];
+    delete validation.formFuns[_name];
     return true;
-  };
-
-  // 表单提交方法
-  cxValidation.formSubmitFn = function(form, options) {
-    event.preventDefault();
-
-    var self = this;
-    var _options = {
-      type: 'object',
-      success: function(result) {
-        form.submit();
-      },
-      error: function(result) {
-        if (typeof result.message === 'string' && result.message.length) {
-          if (typeof $.cxDialog === 'function') {
-            $.cxDialog({
-              title: '提示',
-              info: result.message,
-              ok: function() {
-                self.toFocus(result.element);
-              }
-            });
-
-          } else {
-            if (typeof self.closeTipWait !== 'undefined') {
-              clearTimeout(self.closeTipWait);
-            };
-
-            // 在顶部提示，输入框获取焦点时，会被顶起导致看不到提示内容，若不获取焦点又不太明白是哪个输入框的提示
-            self.dom.tip.innerHTML = result.message;
-            self.dom.tip.classList.add('show');
-            self.toFocus(result.element);
-
-            self.closeTipWait = setTimeout(function() {
-              self.dom.tip.classList.remove('show');
-            }, 3000);
-          };
-
-        } else {
-          self.dom.tip.classList.remove('show');
-          self.toFocus(result.element);
-        };
-      }
-    };
-
-    options = $.extend({}, _options, options);
-
-    self.valid(form, options);
-  };
-
-  // 元素获取焦点
-  cxValidation.toFocus = function(el) {
-    if (validation.isVisible(el)) {
-      el.focus();
-    };
   };
 
   $.cxValidation = window.cxValidation = cxValidation;
