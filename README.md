@@ -111,9 +111,9 @@ max[int] | 最大数值限制
 integer | 验证整数
 number | 验证数值（正负数、浮点数）
 onlyNumber | 只能填写数字
-onlyNumberSp | 只能填写英文字母
+onlyNumberSp | 只能填写数字和空格
 onlyLetterSp | 只能填写英文字母和空格
-onlyLetterNumber | 只能填写英文字母与数字
+onlyLetterNumber | 只能填写英文字母和数字
 onlyLetterNumberSp | 只能填写英文字母、数字、空格
 email | 验证电子邮件地址
 phone | 验证电话号码
