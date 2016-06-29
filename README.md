@@ -3,7 +3,7 @@
 
 **版本：**
 * Zepto v1.0+ | jQuery v1.7+
-* cxValidation 0.5
+* cxValidation 0.7
 
 文档：http://code.ciaoca.com/javascript/cxValidation/
 
@@ -11,7 +11,7 @@
 
 **Future:**
 * 日期验证规则
-* 完全支持原生 JavaScript，不再依赖 jQuery 或 Zepto
+* 完全原生 JavaScript，不依赖 jQuery 或 Zepto
 
 ##使用方法
 ###载入 CSS 文件
@@ -50,21 +50,27 @@ $.cxValidation.attach($('#form_id'));
 
 ##参数说明
 ```javascript
-var options = { 
-  complete: function(result) { 
-    console.log('验证完成', result); 
-  }, 
-  success: function(result) { 
-    console.log('验证通过', result); 
-  }, 
-  error: function(result) { 
-    console.log('验证失败', result); 
-  } 
-}; 
- 
-cxValidation(document.getElementById('input_id'), options); 
-cxValidation(document.getElementById('form_id'), options); 
-cxValidation.attach(document.getElementById('form_id'), options); 
+var options = {
+  complete: function(result) {
+    console.log('验证完成', result);
+  },
+  success: function(result) {
+    console.log('验证通过', result);
+  },
+  error: function(result) {
+    console.log('验证失败', result);
+  }
+};
+
+// 简易方法，快速设置验证成功及失败的回调
+cxValidation(document.getElementById('input_id'), options.success, options.error);
+cxValidation(document.getElementById('form_id'), options.success, options.error);
+cxValidation.attach(document.getElementById('form_id'), options.success, options.error);
+
+// 完整方法，可设置验证完成、成功及失败的回调
+cxValidation(document.getElementById('input_id'), options);
+cxValidation(document.getElementById('form_id'), options);
+cxValidation.attach(document.getElementById('form_id'), options);
 ```
 
 名称 | 默认值 | 说明

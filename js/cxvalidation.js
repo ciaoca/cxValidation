@@ -1,8 +1,8 @@
 /*!
  * cxValidation
  * @name cxvalidation.js
- * @version 0.6
- * @date 2016-04-08
+ * @version 0.7
+ * @date 2016-06-29
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
@@ -526,7 +526,7 @@
         };
 
       } else if (typeof arguments[i] === 'object') {
-        _options = arguments[i];
+        _options = $.extend(_options, arguments[i]);
       };
     };
 
@@ -546,28 +546,47 @@
   // 绑定到表单
   cxValidation.attach = function(form, options) {
     var self = this;
+    var _form;
+    var _options = {};
 
-    if (validation.isJquery(form) || validation.isZepto(form)) {
-      form = form[0];
+    // 分配参数
+    for (var i = 0, l = arguments.length; i < l; i++) {
+      if (validation.isJquery(arguments[i]) || validation.isZepto(arguments[i]) || validation.isElement(arguments[i])) {
+        if (validation.isJquery(arguments[i]) || validation.isZepto(arguments[i])) {
+          _form = arguments[i][0];
+        } else {
+          _form = arguments[i];
+        };
+
+      } else if (typeof arguments[i] === 'function') {
+        if (typeof _options.success === 'function') {
+          _options.error = arguments[i];
+        } else {
+          _options.success = arguments[i];
+        };
+
+      } else if (typeof arguments[i] === 'object') {
+        _options = $.extend(_options, arguments[i]);
+      };
     };
 
-    if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
+    if (!validation.isElement(_form) || !_form.nodeName || _form.nodeName.toLowerCase() !== 'form') {
       return false;
     };
 
-    var _name = form.dataset.cxVid;
+    var _name = _form.dataset.cxVid;
 
-    if (typeof validation.formFuns[_name] === 'function') {
-      return false;
+    if (typeof validation.formFuns[_name] !== 'function') {
+      _name = 'cxValid_' + validation.vid;
+      _form.dataset.cxVid = _name;
+      validation.vid++;
+    } else {
+      form.removeEventListener('submit', validation.formFuns[_name]);
     };
 
-    _name = 'cxValid_' + validation.vid;
-    validation.vid++;
+    validation.formFuns[_name] = validation.formSubmitFn.bind(validation, _form, _options);
 
-    form.dataset.cxVid = _name;
-    validation.formFuns[_name] = validation.formSubmitFn.bind(validation, form, options);
-
-    form.addEventListener('submit', validation.formFuns[_name]);
+    _form.addEventListener('submit', validation.formFuns[_name]);
     return true;
   };
 
@@ -590,8 +609,6 @@
     };
 
     form.removeEventListener('submit', validation.formFuns[_name]);
-    delete form.dataset.cxVid;
-    delete validation.formFuns[_name];
     return true;
   };
 
