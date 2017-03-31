@@ -13,19 +13,19 @@
 * 日期验证规则
 * 完全原生 JavaScript，不依赖 jQuery 或 Zepto
 
-##使用方法
-###载入 CSS 文件
+## 使用方法
+### 载入 CSS 文件
 ```html
 <link rel="stylesheet" href="cxvalidation.css">
 ```
 
-###载入 JavaScript 文件
+### 载入 JavaScript 文件
 ```html
 <script src="zepto.js"></script>
 <script src="cxvalidation.js"></script>
 ```
 
-###获取验证结果
+### 获取验证结果
 ```javascript
 // 结果返回 true 或 false 
  
@@ -38,7 +38,7 @@ $.cxValidation($('#input_id'));
 $.cxValidation($('#form_id'));
 ```
 
-###绑定表单验证
+### 绑定表单验证
 ```javascript
 // 绑定表单的提交事件，验证失败会有提示，验证通过后才会提交
 // JavaScript
@@ -48,7 +48,7 @@ cxValidation.attach(document.getElementById('form_id'));
 $.cxValidation.attach($('#form_id'));
 ```
 
-##参数说明
+## 参数说明
 ```javascript
 var options = {
   complete: function(result) {
@@ -79,7 +79,7 @@ complete | undefined | 验证完成时调用的方法
 success | undefined | 验证通过时调用的方法
 error | undefined | 验证失败时调用的方法
 
-###回调函数参数  result 说明
+### 回调函数参数 result 说明
 名称 | 类型 | 说明
 --- | ---| ---
 status | boolean | 验证结果
@@ -89,7 +89,7 @@ element | DOM Element | 验证未通过的元素
 
 
   
-##验证规则
+## 验证规则
 验证规则放置在```input```的```data-validation```属性中，如使用多个规则，用```,```分割
 
 ```html
@@ -125,16 +125,16 @@ chinaZip | 验证邮政编码
 qq | 验证 QQ 号码
 call[functionName] | 调用外部函数验证
   
-##Data 属性
+## Data 属性
 ```html
 <input data-validation="required" data-validation-message="该项为必填">
 ```
 名称 | 说明
 --- | ---
 validation | 验证规则
-validation-message | 验证提示消息
+validation-message | 验证提示消息 [[DEMO：根据不同规则设置不同提示消息](http://code.ciaoca.com/javascript/cxValidation/demo/message)]
 
-##API 方法
+## API 方法
 名称 | 示例 | 说明
 --- | ---| ---
 attach | cxValidation.attach(document.getElementById('form_id'), options) | 绑定表单验证
