@@ -1,8 +1,8 @@
 /*!
  * cxValidation
  * @name cxvalidation.js
- * @version 0.7
- * @date 2016-06-29
+ * @version 0.8
+ * @date 2017-07-06
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
@@ -70,7 +70,8 @@
     },
     isVisible: function(o) {
       return !this.isHidden(o);
-    }
+    },
+    isAndroid: /android/i.test(navigator.userAgent)
   };
 
   // 验证方法
@@ -455,34 +456,24 @@
         form.submit();
       },
       error: function(result) {
+        var _nodeName = result.element.nodeName.toLowerCase();
+
         if (typeof result.message === 'string' && result.message.length) {
-          if (typeof $.cxDialog === 'function') {
-            $.cxDialog({
-              title: '提示',
-              info: result.message,
-              ok: function() {
-                self.toFocus(result.element);
-              }
-            });
-
+          if (self.isAndroid && _nodeName === 'select') {
+            self.toMessage(result.element, result.message);
           } else {
-            if (typeof self.closeTipWait !== 'undefined') {
-              clearTimeout(self.closeTipWait);
-            };
-
-            // 在顶部提示，输入框获取焦点时，会被顶起导致看不到提示内容，若不获取焦点又不太明白是哪个输入框的提示
-            self.dom.tip.innerHTML = result.message;
-            self.dom.tip.classList.add('show');
-            self.toFocus(result.element);
-
-            self.closeTipWait = setTimeout(function() {
-              self.dom.tip.classList.remove('show');
-            }, 3000);
+            self.toMessage(result.element, result.message, function() {
+              self.toFocus(result.element);
+            });
           };
 
         } else {
           self.dom.tip.classList.remove('show');
-          self.toFocus(result.element);
+          if (self.isAndroid && _nodeName === 'select') {
+            self.toMessage(result.element);
+          } else {
+            self.toFocus(result.element);
+          };
         };
       }
     };
@@ -492,10 +483,55 @@
     self.validForm(form, options);
   };
 
+  // 提示信息
+  validation.toMessage = function(el, message, callback) {
+    var self = this;
+    var _nodeName = el.nodeName.toLowerCase();
+
+    if (typeof message !== 'string' || !message.length) {
+      message = '表单验证未通过';
+    };
+
+    if (typeof callback !== 'function') {
+      callback = function() {};
+    };
+
+    if (typeof $.cxDialog === 'function') {
+      $.cxDialog({
+        title: '提示',
+        info: message,
+        ok: callback
+      });
+
+    } else {
+      if (typeof self.closeTipWait !== 'undefined') {
+        clearTimeout(self.closeTipWait);
+      };
+
+      // 在顶部提示，输入框获取焦点时，会被顶起导致看不到提示内容，若不获取焦点又不太明白是哪个输入框的提示
+      self.dom.tip.innerHTML = message;
+      self.dom.tip.classList.add('show');
+      callback();
+
+      self.closeTipWait = setTimeout(function() {
+        self.dom.tip.classList.remove('show');
+      }, 3000);
+    };
+  };
+
   // 元素获取焦点
   validation.toFocus = function(el) {
-    if (this.isVisible(el)) {
-      el.focus();
+    var self = this;
+    var _nodeName = el.nodeName.toLowerCase();
+
+    if (self.isVisible(el)) {
+      if (self.isAndroid) {
+        if (_nodeName === 'select') {
+          self.toMessage(el);
+        };
+      } else {
+        el.focus();
+      };
     };
   };
 
