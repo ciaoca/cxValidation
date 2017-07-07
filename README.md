@@ -3,7 +3,7 @@
 
 **版本：**
 * Zepto v1.0+ | jQuery v1.7+
-* cxValidation 0.7
+* cxValidation 0.8
 
 文档：http://code.ciaoca.com/javascript/cxValidation/
 
