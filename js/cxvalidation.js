@@ -1,8 +1,8 @@
 /*!
  * cxValidation
  * @name cxvalidation.js
- * @version 0.8
- * @date 2017-07-06
+ * @version 0.8.1
+ * @date 2017-09-18
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
@@ -528,6 +528,8 @@
       if (self.isAndroid) {
         if (_nodeName === 'select') {
           self.toMessage(el);
+        } else {
+          el.focus();
         };
       } else {
         el.focus();
