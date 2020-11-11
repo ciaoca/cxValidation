@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 <title>cxValidation 移动端表单验证 &raquo; 在线演示 - 前端开发仓库</title>
 <style>
 body{background:#ddd;font:14px/1.7 tahoma,'\5fae\8f6f\96c5\9ed1',sans-serif;}
@@ -14,6 +15,11 @@ a{color:#06f;text-decoration:none;}
 a:hover{color:#00f;}
 
 .wrap{width:800px;margin:0 auto;padding:20px 40px;border-radius:8px;background:#fff;box-shadow:0 0 10px rgba(0,0,0,0.5);}
+
+@media (max-width:900px){
+body{margin:0;padding:0;}
+.wrap{width:auto;padding:10px 20px;border-radius:0;}
+}
 </style>
 </head>
 <body>
@@ -22,50 +28,79 @@ a:hover{color:#00f;}
 
   <h2>示例</h2>
   <form action="?" method="get" id="test_form" class="form">
-    <fieldset id="city_china">
+
+    <fieldset>
+      <legend>自定义验证方法</legend>
+      <div>
+        <input type="text" size="30" placeholder="填写 ciaoca" data-validation="call[myFunction][ciaoca]">
+      </div>
+    </fieldset>
+    <fieldset>
       <legend>required</legend>
       <dl>
         <dt>用户名</dt>
-        <dd><input type="text" class="input" size="30" data-validation="required"></dd>
+        <dd><input type="text" size="30" data-validation="required" data-validation-title="用户名"></dd>
       </dl>
       <dl>
         <dt>密码</dt>
-        <dd><input type="password" class="input" size="30" data-validation="required"></dd>
+        <dd><input type="password" id="pwd" size="30" data-validation="required" data-validation-title="密码"></dd>
       </dl>
+      <dl>
+        <dt>重复密码</dt>
+        <dd><input type="password" size="30" data-validation="equals[pwd]" data-validation-title="密码"></dd>
+      </dl>
+      <dl>
+        <dt>学历</dt>
+        <dd>
+          <select id="edu" class="select" data-validation="required" data-validation-title="学历">
+            <option value="">请选择</option>
+            <option value="1">小学</option>
+            <option value="2">初中</option>
+            <option value="3">高中</option>
+            <option value="4">大专</option>
+            <option value="5">本科</option>
+            <option value="6">硕士</option>
+            <option value="7">博士</option>
+            <option value="0">其他</option>
+          </select>
+          <div><input type="text" size="30" data-validation="condRequired[edu][0]" data-validation-title="其他学历" placeholder="学历选择“其他”时，需要填写"></div>
+        </dd>
+      </dl>
+      <dl>
+        <dt>自我介绍</dt>
+        <dd>
+          <textarea rows="3" cols="30" data-validation="required" data-validation-title="自我介绍"></textarea>
+        </dd>
+      </dl>
+      <dl>
+        <dt>用户协议</dt>
+        <dd>
+          <input type="checkbox" id="agreement" class="checkbox" size="30" data-validation="required" data-validation-title="协议">
+          <label for="agreement">同意</label>
+        </dd>
+      </dl>
+    </fieldset>
+
+    <fieldset>
+      <legend>groupRequired</legend>
       <dl>
         <dt>性别</dt>
         <dd class="note">
-          <input type="radio" id="sex_male" class="radio" size="30" data-validation="required">
+          <input type="radio" id="sex_male" class="radio" size="30" data-validation="groupRequired[sex]" data-validation-title="性别">
           <label for="sex_male">男</label>
-          <input type="radio" id="sex_female" class="radio" size="30">
+          <input type="radio" id="sex_female" class="radio" size="30" data-validation="groupRequired[sex]" data-validation-title="性别">
           <label for="sex_female">女</label>
         </dd>
       </dl>
       <dl>
         <dt>爱好</dt>
         <dd class="note">
-          <input type="checkbox" id="sex_male" class="checkbox" size="30" data-validation="required">
-          <label for="sex_male">旅游</label>
-          <input type="checkbox" id="sex_female" class="checkbox" size="30">
-          <label for="sex_female">看书</label>
-          <input type="checkbox" id="sex_female" class="checkbox" size="30">
-          <label for="sex_female">游戏</label>
-        </dd>
-      </dl>
-      <dl>
-        <dt>婚否</dt>
-        <dd>
-          <select class="select" data-validation="required">
-            <option value="">请选择</option>
-            <option value="0">未婚</option>
-            <option value="1">已婚</option>
-          </select>
-        </dd>
-      </dl>
-      <dl>
-        <dt>自我介绍</dt>
-        <dd>
-          <textarea class="input" data-validation="required" rows="3" cols="30"></textarea>
+          <input type="checkbox" id="hobby_1" class="checkbox" size="30" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_1">旅游</label>
+          <input type="checkbox" id="hobby_2" class="checkbox" size="30" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_2">看书</label>
+          <input type="checkbox" id="hobby_3" class="checkbox" size="30" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_3">游戏</label>
         </dd>
       </dl>
     </fieldset>
@@ -73,30 +108,30 @@ a:hover{color:#00f;}
     <fieldset>
       <legend>minSize[int], maxSize[int]</legend>
       <div>
-        <input type="text" class="input" size="30" placeholder="最少3个字符" data-validation="minSize[3]">
+        <input type="text" size="30" placeholder="最少3个字符" data-validation="minSize[3]" data-validation-title="minSize">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="最多10个字符" data-validation="maxSize[10]">
+        <input type="text" size="30" placeholder="最多10个字符" data-validation="maxSize[10]" data-validation-title="maxSize">
       </div>
     </fieldset>
 
     <fieldset>
       <legend>min[int], max[int]</legend>
       <div>
-        <input type="text" class="input" size="30" placeholder="数值最小为3" data-validation="min[3]">
+        <input type="text" size="30" placeholder="数值最小为3" data-validation="min[3]" data-validation-title="min">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="数值最大为10" data-validation="max[10]">
+        <input type="text" size="30" placeholder="数值最大为10" data-validation="max[10]" data-validation-title="max">
       </div>
     </fieldset>
-    
+
     <fieldset>
         <legend>integer, number</legend>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入整数" data-validation="integer">
+        <input type="text" size="30" placeholder="输入整数" data-validation="integer" data-validation-title="integer">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入数值" data-validation="number">
+        <input type="text" size="30" placeholder="输入数值" data-validation="number" data-validation-title="number">
       </div>
     </fieldset>
 
@@ -104,63 +139,63 @@ a:hover{color:#00f;}
       <legend>only</legend>
       <h4>onlyNumber</h4>
       <div>
-        <input type="text" class="input" size="30" placeholder="只能输入数字（0-9）" data-validation="onlyNumber">
+        <input type="text" size="30" placeholder="只能输入数字（0-9）" data-validation="onlyNumber" data-validation-title="onlyNumber">
       </div>
       <h4>onlyNumberSp</h4>
       <div>
-        <input type="text" class="input" size="30" placeholder="只能输入数字和空格" data-validation="onlyNumberSp">
+        <input type="text" size="30" placeholder="只能输入数字和空格" data-validation="onlyNumberSp" data-validation-title="onlyNumberSp">
       </div>
       <h4>onlyLetter</h4>
       <div>
-        <input type="text" class="input" size="30" placeholder="只能输入英文字母" data-validation="onlyLetter">
+        <input type="text" size="30" placeholder="只能输入英文字母" data-validation="onlyLetter" data-validation-title="onlyLetter">
       </div>
       <h4>onlyLetterSp</h4>
       <div>
-        <input type="text" class="input" size="30" placeholder="只能输入英文字母和空格" data-validation="onlyLetterSp">
+        <input type="text" size="30" placeholder="只能输入英文字母和空格" data-validation="onlyLetterSp" data-validation-title="onlyLetterSp">
       </div>
       <h4>onlyLetterNumber</h4>
       <div>
-        <input type="text" class="input" size="30" placeholder="只能输入英文字母和数字" data-validation="onlyLetterNumber">
+        <input type="text" size="30" placeholder="只能输入英文字母和数字" data-validation="onlyLetterNumber" data-validation-title="onlyLetterNumber">
       </div>
       <h4>onlyLetterNumberSp</h4>
       <div>
-        <input type="text" class="input" size="30" placeholder="只能输入英文字母、数字、空格" data-validation="onlyLetterNumberSp">
+        <input type="text" size="30" placeholder="只能输入英文字母、数字、空格" data-validation="onlyLetterNumberSp" data-validation-title="onlyLetterNumberSp">
       </div>
     </fieldset>
-    
+
     <fieldset>
       <legend>email, phone, url</legend>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入电子邮件" data-validation="email">
+        <input type="text" size="30" placeholder="输入电子邮件" data-validation="email" data-validation-title="email">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入电话号码" data-validation="phone">
+        <input type="text" size="30" placeholder="输入电话号码" data-validation="phone" data-validation-title="phone">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入网址" data-validation="url">
+        <input type="text" size="30" placeholder="输入网址" data-validation="url" data-validation-title="url">
       </div>
     </fieldset>
-    
+
     <fieldset>
       <legend>chinese, chinaId, chinaIdLoose</legend>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入中文" data-validation="chinese">
+        <input type="text" size="30" placeholder="输入中文" data-validation="chinese" data-validation-title="chinese">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入身份证号码" data-validation="chinaId">
+        <input type="text" size="30" placeholder="输入身份证号码" data-validation="chinaId" data-validation-title="chinaId">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入身份证号码（兼容旧15位）" data-validation="chinaIdLoose">
+        <input type="text" size="30" placeholder="输入身份证号码（兼容旧15位）" data-validation="chinaIdLoose" data-validation-title="chinaIdLoose">
       </div>
     </fieldset>
 
     <fieldset>
       <legend>chinaZip, qq</legend>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入邮政编码" data-validation="chinaZip">
+        <input type="text" size="30" placeholder="输入邮政编码" data-validation="chinaZip" data-validation-title="chinaZip">
       </div>
       <div>
-        <input type="text" class="input" size="30" placeholder="输入QQ号码" data-validation="qq">
+        <input type="text" size="30" placeholder="输入QQ号码" data-validation="qq" data-validation-title="qq">
       </div>
     </fieldset>
 
@@ -179,9 +214,40 @@ a:hover{color:#00f;}
 </div>
 
 <script src="http://cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script>
+// 自定义提示语言
+// window.cxValidationMessage = {
+//   titleSymbol: {
+//     before: '[',
+//     after: ']',
+//   },
+//   required: {
+//     input: 'Missing content',
+//     radio: 'Not selected',
+//     checkbox: 'Unchecked',
+//     select: 'Not selected',
+//   },
+// };
+</script>
 <script src="js/cxvalidation.js"></script>
 <script>
-cxValidation.attach(document.getElementById('test_form'));
+// 全局表单验证未通过处理方法
+// window.cxValidationFormErrorCallback = function(result) {
+//   console.log(result)
+// };
+
+cxValidation.attach(document.getElementById('test_form'), {
+  // validMessage: {
+  //   required: '不能为空'
+  // }
+});
+
+var myFunction = function(el, key) {
+  return {
+    status: el.value === key,
+    message: '请填写 ' + key
+  };
+};
 </script>
 </body>
 </html>

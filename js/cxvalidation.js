@@ -1,8 +1,8 @@
 /*!
  * cxValidation
  * @name cxvalidation.js
- * @version 0.8.1
- * @date 2017-09-18
+ * @version 0.9.0
+ * @date 2020-11-10
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
@@ -21,10 +21,28 @@
       status: true
     },
     validMessage: {
-      required: '',
-      groupRequired: '至少填写 {{1}} 项',
-      condRequired: '',
-      equals: '两次输入的不一致',
+      titleSymbol: {
+        before: '【',
+        after: '】',
+      },
+      required: {
+        input: '未填写',
+        radio: '未选择',
+        checkbox: '未勾选',
+        select: '未选择',
+      },
+      groupRequired: {
+        input: '至少填写 {{1}} 项',
+        radio: '未选择',
+        checkbox: '至少选择 {{1}} 项',
+      },
+      condRequired: {
+        input: '未填写',
+        radio: '未选择',
+        checkbox: '未勾选',
+        select: '未选择',
+      },
+      equals: '两次输入内容不一致',
       minSize: '最少 {{0}} 个字符',
       maxSize: '最多 {{0}} 个字符',
       min: '最小值为 {{0}}',
@@ -109,21 +127,28 @@
 
       return true;
     },
-    condRequired: function(el, ids) {
+    condRequired: function(el, ids, val) {
       var _cond = false;
       var result = true;
 
-      if (ids.length) {
-        ids = ids.split(',');
+      if (typeof ids === 'string' && ids.length) {
+        if (ids.indexOf(',') > 0) {
+          ids = ids.split(',');
 
-        if (Array.isArray(ids) && ids.length) {
-          _cond = true;
+          if (Array.isArray(ids) && ids.length) {
+            _cond = true;
 
-          for (var i = 0, l = ids.length; i < l; i++) {
-            if (!validation.validFun.required(document.getElementById(ids[i]))) {
-              _cond = false;
-              break
+            for (var i = 0, l = ids.length; i < l; i++) {
+              if (!validation.validFun.required(document.getElementById(ids[i]))) {
+                _cond = false;
+                break;
+              };
             };
+          };
+
+        } else if (typeof val === 'string') {
+          if (document.getElementById(ids).value === val) {
+            _cond = true;
           };
         };
 
@@ -228,13 +253,9 @@
     self.vid = 1;
     self.formFuns = {};
 
-    self.dom = {};
-    self.dom.tip = document.createElement('div')
-    self.dom.tip.classList.add('cxvalidation_tip');
-
-    document.addEventListener('DOMContentLoaded', function() {
-      document.body.appendChild(self.dom.tip);
-    });
+    if (typeof window.cxValidationMessage === 'object') {
+      $.extend(true, self.validMessage, window.cxValidationMessage);
+    };
   };
 
   // 获取验证规则参数
@@ -268,6 +289,7 @@
     var self = this;
     var message = '';
     var args;
+    var _nodeName = el.nodeName.toLowerCase();
 
     if (typeof el.dataset.validationMessage === 'string' && el.dataset.validationMessage.length) {
       try {
@@ -280,14 +302,41 @@
         message = el.dataset.validationMessage;
       };
 
-    } else if (typeof self.validMessage[rule] === 'string' && self.validMessage[rule].length) {
-      message = self.validMessage[rule];
+    } else if (typeof self.validMessage[rule] === 'string' || typeof self.validMessage[rule] === 'object') {
+      if (typeof self.validMessage[rule] === 'string') {
+        message = self.validMessage[rule];
+
+      } else {
+        if (_nodeName === 'input') {
+          if (el.type === 'radio' && typeof self.validMessage[rule].radio === 'string') {
+            message = self.validMessage[rule].radio;
+
+          } else if (el.type === 'checkbox' && typeof self.validMessage[rule].checkbox === 'string') {
+            message = self.validMessage[rule].checkbox;
+
+          } else if (typeof self.validMessage[rule].input === 'string') {
+            message = self.validMessage[rule].input;
+          };
+
+        } else if (_nodeName === 'select' && typeof self.validMessage[rule].select === 'string') {
+          message = self.validMessage[rule].select;
+
+        } else if (typeof self.validMessage[rule].input === 'string') {
+          message = self.validMessage[rule].input;
+        };
+      };
+
+      if (message.length && typeof el.dataset.validationTitle === 'string' && el.dataset.validationTitle.length) {
+        message = self.validMessage.titleSymbol.before + el.dataset.validationTitle + self.validMessage.titleSymbol.after + message;
+      };
     };
 
-    args = self.getRuleArguments(el, rule);
+    if (message.length) {
+      args = self.getRuleArguments(el, rule);
 
-    for (var i = 0, l = args.length; i < l; i++) {
-      message = message.replace(new RegExp('\\{\\{' + i + '\\}\\}'), args[i]);
+      for (var i = 0, l = args.length; i < l; i++) {
+        message = message.replace(new RegExp('\\{\\{' + i + '\\}\\}'), args[i]);
+      };
     };
 
     return message;
@@ -313,6 +362,10 @@
 
     if (typeof errorCallback === 'function') {
       options.error = errorCallback;
+    };
+
+    if (typeof options.validMessage === 'object') {
+      $.extend(true, self.validMessage, options.validMessage);
     };
 
     // self.getRuleArguments(el, 'groupRequired');
@@ -391,6 +444,10 @@
       options.error = errorCallback;
     };
 
+    if (typeof options.validMessage === 'object') {
+      $.extend(true, self.validMessage, options.validMessage);
+    };
+
     self.groupCache = {};
 
     var inputs = [].concat(Array.prototype.slice.call(form.querySelectorAll('input')), Array.prototype.slice.call(form.querySelectorAll('textarea')), Array.prototype.slice.call(form.querySelectorAll('select')));
@@ -450,27 +507,26 @@
     event.preventDefault();
 
     var self = this;
+
+    // 默认处理逻辑
     var _options = {
       type: 'object',
       success: function(result) {
         form.submit();
       },
       error: function(result) {
-        var _nodeName = result.element.nodeName.toLowerCase();
+        if (self.isAndroid) {
+          self.toMessage(result.element, result.message);
 
-        if (typeof result.message === 'string' && result.message.length) {
-          if (self.isAndroid && _nodeName === 'select') {
-            self.toMessage(result.element, result.message);
-          } else {
+        } else if (result.rule === 'required' || result.rule === 'condRequired') {
+          self.toFocus(result.element);
+
+        } else {
+          if (typeof result.message === 'string' && result.message.length) {
             self.toMessage(result.element, result.message, function() {
               self.toFocus(result.element);
             });
-          };
 
-        } else {
-          self.dom.tip.classList.remove('show');
-          if (self.isAndroid && _nodeName === 'select') {
-            self.toMessage(result.element);
           } else {
             self.toFocus(result.element);
           };
@@ -486,54 +542,28 @@
   // 提示信息
   validation.toMessage = function(el, message, callback) {
     var self = this;
-    var _nodeName = el.nodeName.toLowerCase();
-
-    if (typeof message !== 'string' || !message.length) {
-      message = '表单验证未通过';
-    };
-
-    if (typeof callback !== 'function') {
-      callback = function() {};
-    };
 
     if (typeof $.cxDialog === 'function') {
       $.cxDialog({
         title: '提示',
         info: message,
-        ok: callback
+        ok: typeof callback === 'function' ? callback : function() {}
       });
 
-    } else {
-      if (typeof self.closeTipWait !== 'undefined') {
-        clearTimeout(self.closeTipWait);
-      };
-
-      // 在顶部提示，输入框获取焦点时，会被顶起导致看不到提示内容，若不获取焦点又不太明白是哪个输入框的提示
-      self.dom.tip.innerHTML = message;
-      self.dom.tip.classList.add('show');
+    } else if (typeof callback === 'function') {
       callback();
 
-      self.closeTipWait = setTimeout(function() {
-        self.dom.tip.classList.remove('show');
-      }, 3000);
+    } else {
+      alert(message);
     };
   };
 
   // 元素获取焦点
   validation.toFocus = function(el) {
     var self = this;
-    var _nodeName = el.nodeName.toLowerCase();
 
     if (self.isVisible(el)) {
-      if (self.isAndroid) {
-        if (_nodeName === 'select') {
-          self.toMessage(el);
-        } else {
-          el.focus();
-        };
-      } else {
-        el.focus();
-      };
+      el.focus();
     };
   };
 
@@ -606,6 +636,10 @@
       } else if (typeof arguments[i] === 'object') {
         _options = $.extend(_options, arguments[i]);
       };
+    };
+
+    if (typeof _options.error !== 'function' && typeof window.cxValidationFormErrorCallback === 'function') {
+      _options.error = window.cxValidationFormErrorCallback;
     };
 
     if (!validation.isElement(_form) || !_form.nodeName || _form.nodeName.toLowerCase() !== 'form') {
