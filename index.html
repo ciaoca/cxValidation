@@ -28,13 +28,6 @@ body{margin:0;padding:0;}
 
   <h2>示例</h2>
   <form action="?" method="get" id="test_form" class="form">
-
-    <fieldset>
-      <legend>自定义验证方法</legend>
-      <div>
-        <input type="text" size="30" placeholder="填写 ciaoca" data-validation="call[myFunction][ciaoca]">
-      </div>
-    </fieldset>
     <fieldset>
       <legend>required</legend>
       <dl>
@@ -196,6 +189,13 @@ body{margin:0;padding:0;}
       </div>
       <div>
         <input type="text" size="30" placeholder="输入QQ号码" data-validation="qq" data-validation-title="qq">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>自定义验证方法</legend>
+      <div>
+        <input type="text" size="30" placeholder="填写 ciaoca" data-validation="call[myFunction][ciaoca]">
       </div>
     </fieldset>
 
