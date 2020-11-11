@@ -545,7 +545,6 @@
 
     if (typeof $.cxDialog === 'function') {
       $.cxDialog({
-        title: '提示',
         info: message,
         ok: typeof callback === 'function' ? callback : function() {}
       });
