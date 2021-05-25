@@ -1,8 +1,8 @@
 /*!
  * cxValidation
  * @name cxvalidation.js
- * @version 0.9.0
- * @date 2020-11-10
+ * @version 0.9.1
+ * @date 2021-05-24
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
@@ -146,16 +146,22 @@
             };
           };
 
-        } else if (typeof val === 'string') {
-          if (document.getElementById(ids).value === val) {
-            _cond = true;
+        } else {
+          if (typeof val === 'string') {
+            if (document.getElementById(ids).value === val) {
+              _cond = true;
+            };
+          } else {
+            if (validation.validFun.required(document.getElementById(ids))) {
+              _cond = true;
+            };
           };
         };
 
         if (_cond) {
           result = validation.validFun.required(el);
         };
-      }
+      };
 
       return result;
     },

@@ -28,7 +28,7 @@ body{margin:0;padding:0;}
 
   <h2>示例</h2>
   <form action="?" method="get" id="test_form" class="form">
-    <fieldset>
+    <!-- <fieldset>
       <legend>required</legend>
       <dl>
         <dt>用户名</dt>
@@ -41,23 +41,6 @@ body{margin:0;padding:0;}
       <dl>
         <dt>重复密码</dt>
         <dd><input type="password" size="30" data-validation="equals[pwd]" data-validation-title="密码"></dd>
-      </dl>
-      <dl>
-        <dt>学历</dt>
-        <dd>
-          <select id="edu" class="select" data-validation="required" data-validation-title="学历">
-            <option value="">请选择</option>
-            <option value="1">小学</option>
-            <option value="2">初中</option>
-            <option value="3">高中</option>
-            <option value="4">大专</option>
-            <option value="5">本科</option>
-            <option value="6">硕士</option>
-            <option value="7">博士</option>
-            <option value="0">其他</option>
-          </select>
-          <div><input type="text" size="30" data-validation="condRequired[edu][0]" data-validation-title="其他学历" placeholder="学历选择“其他”时，需要填写"></div>
-        </dd>
       </dl>
       <dl>
         <dt>自我介绍</dt>
@@ -94,6 +77,124 @@ body{margin:0;padding:0;}
           <label for="hobby_2">看书</label>
           <input type="checkbox" id="hobby_3" class="checkbox" size="30" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
           <label for="hobby_3">游戏</label>
+        </dd>
+      </dl>
+    </fieldset> -->
+
+    <fieldset>
+      <legend>condRequired</legend>
+      <dl>
+        <dt>cond: input</dt>
+        <dd>
+          <input type="text" id="cond_input" size="12" placeholder="选填项">
+        </dd>
+        <dd>
+          <input type="text" size="24" data-validation="condRequired[cond_input]" data-validation-title="cond:input" placeholder="选填项有值时，则必填">
+          <input type="radio" data-validation="condRequired[cond_input]" data-validation-title="cond:input">radio
+          <input type="checkbox" data-validation="condRequired[cond_input]" data-validation-title="cond:input">checkbox
+          <select data-validation="condRequired[cond_input]" data-validation-title="cond:input">
+            <option value="">选填项有值时，则必选</option>
+            <option value="value">value</option>
+          </select>
+        </dd>
+        <dd>
+          <textarea rows="3" cols="30" placeholder="选填项有值时，则必填" data-validation="condRequired[cond_input]" data-validation-title="cond:input"></textarea>
+        </dd>
+      </dl>
+      <dl>
+        <dt>cond: radio</dt>
+        <dd>
+          <input type="radio" id="cond_radio">可选项
+        </dd>
+        <dd>
+          <input type="text" size="24" data-validation="condRequired[cond_radio]" data-validation-title="cond:radio" placeholder="选填项有值时，则必填">
+          <input type="radio" data-validation="condRequired[cond_radio]" data-validation-title="cond:radio">radio
+          <input type="checkbox" data-validation="condRequired[cond_radio]" data-validation-title="cond:radio">checkbox
+          <select data-validation="condRequired[cond_radio]" data-validation-title="cond:radio">
+            <option value="">选填项有值时，则必选</option>
+            <option value="value">value</option>
+          </select>
+        </dd>
+        <dd>
+          <textarea rows="3" cols="30" placeholder="选填项有值时，则必填" data-validation="condRequired[cond_radio]" data-validation-title="cond:radio"></textarea>
+        </dd>
+      </dl>
+      <dl>
+        <dt>cond: checkbox</dt>
+        <dd>
+          <input type="checkbox" id="checkbox">可选项
+        </dd>
+        <dd>
+          <input type="text" size="24" data-validation="condRequired[checkbox]" data-validation-title="cond:checkbox" placeholder="选填项有值时，则必填">
+          <input type="radio" data-validation="condRequired[checkbox]" data-validation-title="cond:checkbox">radio
+          <input type="checkbox" data-validation="condRequired[checkbox]" data-validation-title="cond:checkbox">checkbox
+          <select data-validation="condRequired[checkbox]" data-validation-title="cond:checkbox">
+            <option value="">选填项有值时，则必选</option>
+            <option value="value">value</option>
+          </select>
+        </dd>
+        <dd>
+          <textarea rows="3" cols="30" placeholder="选填项有值时，则必填" data-validation="condRequired[checkbox]" data-validation-title="cond:checkbox"></textarea>
+        </dd>
+      </dl>
+      <dl>
+        <dt>cond: select</dt>
+        <dd>
+          <select id="cond_select">
+            <option value="">可选项</option>
+            <option value="value">value</option>
+          </select>
+        </dd>
+        <dd>
+          <input type="text" size="24" data-validation="condRequired[cond_select]" data-validation-title="cond:select" placeholder="选填项有值时，则必填">
+          <input type="radio" data-validation="condRequired[cond_select]" data-validation-title="cond:select">radio
+          <input type="checkbox" data-validation="condRequired[cond_select]" data-validation-title="cond:select">checkbox
+          <select data-validation="condRequired[cond_select]" data-validation-title="cond:select">
+            <option value="">选填项有值时，则必选</option>
+            <option value="value">value</option>
+          </select>
+        </dd>
+        <dd>
+          <textarea rows="3" cols="30" placeholder="选填项有值时，则必填" data-validation="condRequired[cond_select]" data-validation-title="cond:select"></textarea>
+        </dd>
+      </dl>
+      <dl>
+        <dt>地址</dt>
+        <dd>
+          <select id="province">
+            <option value="">省份</option>
+            <option value="1">浙江省</option>
+          </select>
+          <select id="city">
+            <option value="">城市</option>
+            <option value="2">浙江省</option>
+          </select>
+          <select id="area">
+            <option value="">地区</option>
+            <option value="3">西湖区</option>
+          </select>
+        </dd>
+        <dd>
+          <input type="text" size="30" data-validation="condRequired[province,city,area]" data-validation-title="地址" placeholder="省市区都有选择时，需要填写">
+        </dd>
+      </dl>
+      <dl>
+        <dt>学历</dt>
+        <dd>
+          <select id="edu" class="select">
+            <option value="">请选择</option>
+            <option value="1">小学</option>
+            <option value="2">初中</option>
+            <option value="3">高中</option>
+            <option value="4">大专</option>
+            <option value="5">本科</option>
+            <option value="6">硕士</option>
+            <option value="7">博士</option>
+            <option value="0">其他</option>
+          </select>
+        </dd>
+        <dd>
+          <input type="text" size="30" data-validation="condRequired[edu][0]" data-validation-title="其他学历" placeholder="学历选择“其他”时，需要填写">
         </dd>
       </dl>
     </fieldset>
@@ -192,12 +293,12 @@ body{margin:0;padding:0;}
       </div>
     </fieldset>
 
-    <fieldset>
+    <!-- <fieldset>
       <legend>自定义验证方法</legend>
       <div>
         <input type="text" size="30" placeholder="填写 ciaoca" data-validation="call[myFunction][ciaoca]">
       </div>
-    </fieldset>
+    </fieldset> -->
 
     <button type="submit" class="button blue">验证表单</button>
   </form>
