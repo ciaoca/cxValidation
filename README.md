@@ -57,7 +57,11 @@ success | function | 验证通过时回调函数
 error | function | 验证未通过时回调函数
 
 ```javascript
-var options = {
+// 绑定表单的提交事件，验证通过后才会提交
+cxValidation.attach(document.getElementById('form_id'));
+
+// 自定义表单验证完成后的处理方式
+cxValidation.attach(document.getElementById('form_id'), {
   // 验证完成
   complete: function(result) {
     console.log('验证完成', result);
@@ -70,13 +74,7 @@ var options = {
   error: function(result) {
     console.log('验证未通过', result);
   }
-};
-
-// 绑定表单的提交事件，验证通过后才会提交
-cxValidation.attach(document.getElementById('form_id'));
-
-// 自定义表单验证完成后的处理方式
-cxValidation.attach(document.getElementById('form_id'), options);
+});
 
 // 表单验证未通过时，默认处理方法，建议搭配对话框插件进行提示
 cxValidation.setOptions({
