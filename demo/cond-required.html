@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cxValidation 表单验证 - 示例</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="../css/demo.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>cxValidation 移动端表单验证</h1>
+  </div>
+</header>
+<div class="main">
+  <div class="wrap">
+    <nav>
+      <a href="required.html">必填</a>
+      <a href="group-required.html">群组必填</a>
+      <a class="active" href="cond-required.html">依赖必填</a>
+      <a href="rules.html">验证规则</a>
+      <a href="call.html">自定义验证规则</a>
+      <a href="index.html">搭配对话框插件</a>
+      <a href="message.html">自定义提示信息</a>
+    </nav>
+
+    <h2>依赖必填</h2>
+
+    <form action="?" method="get" id="test_form">
+      <fieldset>
+        <legend>condRequired: input</legend>
+        <p>
+          <input type="text" size="30" id="cond_input" placeholder="依赖项（选填）">
+        </p>
+        <blockquote>当依赖项有值时，以下选项将变成必填项</blockquote>
+        <p>
+          <input type="text" size="30" data-validation="condRequired[cond_input]" data-validation-title="cond:input">
+        </p>
+        <p>
+          <label><input type="radio" data-validation="condRequired[cond_input]" data-validation-title="cond:radio"> radio</label>
+        </p>
+        <p>
+          <label><input type="checkbox" data-validation="condRequired[cond_input]" data-validation-title="cond:checkbox"> checkbox</label>
+        </p>
+        <p>
+          <select data-validation="condRequired[cond_input]" data-validation-title="cond:select">
+            <option value="">not value</option>
+            <option value="value">has value</option>
+          </select>
+        </p>
+        <p>
+          <textarea cols="30" rows="3" data-validation="condRequired[cond_input]" data-validation-title="cond:textarea"></textarea>
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>condRequired: radio</legend>
+        <p>
+          <label><input type="radio" name="radio_test" id="cond_radio"> 依赖项</label>
+          <label><input type="radio" name="radio_test"> 不依赖</label>
+        </p>
+        <blockquote>当依赖项有值时，以下选项将变成必填项</blockquote>
+        <p>
+          <input type="text" size="30" data-validation="condRequired[cond_radio]" data-validation-title="cond:input">
+        </p>
+        <p>
+          <label><input type="radio" data-validation="condRequired[cond_radio]" data-validation-title="cond:radio"> radio</label>
+        </p>
+        <p>
+          <label><input type="checkbox" data-validation="condRequired[cond_radio]" data-validation-title="cond:checkbox"> checkbox</label>
+        </p>
+        <p>
+          <select data-validation="condRequired[cond_radio]" data-validation-title="cond:select">
+            <option value="">not value</option>
+            <option value="value">has value</option>
+          </select>
+        </p>
+        <p>
+          <textarea cols="30" rows="3" data-validation="condRequired[cond_radio]" data-validation-title="cond:textarea"></textarea>
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>condRequired: checkbox</legend>
+        <p>
+          <label><input type="checkbox" id="cond_checkbox"> 依赖项</label>
+        </p>
+        <blockquote>当依赖项有值时，以下选项将变成必填项</blockquote>
+        <p>
+          <input type="text" size="30" data-validation="condRequired[cond_checkbox]" data-validation-title="cond:input">
+        </p>
+        <p>
+          <label><input type="radio" data-validation="condRequired[cond_checkbox]" data-validation-title="cond:radio"> radio</label>
+        </p>
+        <p>
+          <label><input type="checkbox" data-validation="condRequired[cond_checkbox]" data-validation-title="cond:checkbox"> checkbox</label>
+        </p>
+        <p>
+          <select data-validation="condRequired[cond_checkbox]" data-validation-title="cond:select">
+            <option value="">not value</option>
+            <option value="value">has value</option>
+          </select>
+        </p>
+        <p>
+          <textarea cols="30" rows="3" data-validation="condRequired[cond_checkbox]" data-validation-title="cond:textarea"></textarea>
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>condRequired: select</legend>
+        <p>
+          <select id="cond_select">
+            <option value="">不依赖</option>
+            <option value="value">依赖项</option>
+          </select>
+        </p>
+        <blockquote>当依赖项有值时，以下选项将变成必填项</blockquote>
+        <p>
+          <input type="text" size="30" data-validation="condRequired[cond_select]" data-validation-title="cond:input">
+        </p>
+        <p>
+          <label><input type="radio" data-validation="condRequired[cond_select]" data-validation-title="cond:radio"> radio</label>
+        </p>
+        <p>
+          <label><input type="checkbox" data-validation="condRequired[cond_select]" data-validation-title="cond:checkbox"> checkbox</label>
+        </p>
+        <p>
+          <select data-validation="condRequired[cond_select]" data-validation-title="cond:select">
+            <option value="">not value</option>
+            <option value="value">has value</option>
+          </select>
+        </p>
+        <p>
+          <textarea cols="30" rows="3" data-validation="condRequired[cond_select]" data-validation-title="cond:textarea"></textarea>
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>condRequired[id1,id2,..]</legend>
+        <blockquote>多个依赖项都有值时，才变成必填项</blockquote>
+        <p>
+          <select id="province">
+            <option value="">省份</option>
+            <option value="1">浙江省</option>
+          </select>
+          <select id="city">
+            <option value="">城市</option>
+            <option value="2">浙江省</option>
+          </select>
+          <select id="area">
+            <option value="">地区</option>
+            <option value="3">西湖区</option>
+          </select>
+          <input type="text" size="30" placeholder="省市区都有选择时，才需要填写" data-validation="condRequired[province,city,area]" data-validation-title="地址">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>condRequired[id][value]</legend>
+        <blockquote>当依赖项的值等于指定的值时，才变成必填项</blockquote>
+        <p>
+          <select id="edu" class="select">
+            <option value="">请选择</option>
+            <option value="1">小学</option>
+            <option value="2">初中</option>
+            <option value="3">高中</option>
+            <option value="4">大专</option>
+            <option value="5">本科</option>
+            <option value="6">硕士</option>
+            <option value="7">博士</option>
+            <option value="0">其他</option>
+          </select>
+          <input type="text" size="30" placeholder="选择“其他”时，才需要填写" data-validation="condRequired[edu][0]" data-validation-title="其他学历">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+    </form>
+
+    <div class="about">
+      <section>
+        <h2>文档</h2>
+        <p><a target="_blank" href="https://github.com/ciaoca/cxValidation">Github</a></p>
+      </section>
+      <section>
+        <h2>作者</h2>
+        <p><a target="_blank" href="http://ciaoca.com/">Ciaoca</a></p>
+      </section>
+      <section>
+        <h2>协议</h2>
+        <p>Released under the MIT license</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="//cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script> -->
+<script src="//cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script src="../js/cxvalidation.js"></script>
+<script>
+cxValidation.attach(document.getElementById('test_form'));
+</script>
+</body>
+</html>

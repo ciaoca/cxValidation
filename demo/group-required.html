@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cxValidation 表单验证 - 示例</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="../css/demo.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>cxValidation 移动端表单验证</h1>
+  </div>
+</header>
+<div class="main">
+  <div class="wrap">
+    <nav>
+      <a href="required.html">必填</a>
+      <a class="active" href="group-required.html">群组必填</a>
+      <a href="cond-required.html">依赖必填</a>
+      <a href="rules.html">验证规则</a>
+      <a href="call.html">自定义验证规则</a>
+      <a href="index.html">搭配对话框插件</a>
+      <a href="message.html">自定义提示信息</a>
+    </nav>
+
+    <h2>群组必填</h2>
+
+    <form action="?" method="get" id="test_form">
+      <fieldset>
+        <legend>groupRequired[key]</legend>
+        <blockquote>至少填写 1 项</blockquote>
+        <p>
+          <input type="text" size="30" data-validation="groupRequired[txt]">
+          <input type="text" size="30" data-validation="groupRequired[txt]">
+        </p>
+
+        <blockquote>至少选择 1 项</blockquote>
+        <p>
+          <input type="radio" id="sex_male" class="radio" data-validation="groupRequired[sex]" data-validation-title="性别">
+          <label for="sex_male">男</label>
+          <input type="radio" id="sex_female" class="radio" data-validation="groupRequired[sex]" data-validation-title="性别">
+          <label for="sex_female">女</label>
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>groupRequired[key][n]</legend>
+        <blockquote>至少选择 2 项</blockquote>
+        <p>
+          <input type="checkbox" id="hobby_1" class="checkbox" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_1">旅游</label>
+          <input type="checkbox" id="hobby_2" class="checkbox" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_2">看书</label>
+          <input type="checkbox" id="hobby_3" class="checkbox" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_3">动漫</label>
+          <input type="checkbox" id="hobby_4" class="checkbox" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_4">游戏</label>
+          <input type="checkbox" id="hobby_5" class="checkbox" data-validation="groupRequired[hobby][2]" data-validation-title="爱好">
+          <label for="hobby_5">影视</label>
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+    </form>
+
+    <div class="about">
+      <section>
+        <h2>文档</h2>
+        <p><a target="_blank" href="https://github.com/ciaoca/cxValidation">Github</a></p>
+      </section>
+      <section>
+        <h2>作者</h2>
+        <p><a target="_blank" href="http://ciaoca.com/">Ciaoca</a></p>
+      </section>
+      <section>
+        <h2>协议</h2>
+        <p>Released under the MIT license</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="//cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script> -->
+<script src="//cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script src="../js/cxvalidation.js"></script>
+<script>
+cxValidation.attach(document.getElementById('test_form'));
+</script>
+</body>
+</html>

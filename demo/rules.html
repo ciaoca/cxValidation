@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cxValidation 表单验证 - 示例</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="../css/demo.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>cxValidation 移动端表单验证</h1>
+  </div>
+</header>
+<div class="main">
+  <div class="wrap">
+    <nav>
+      <a href="required.html">必填</a>
+      <a href="group-required.html">群组必填</a>
+      <a href="cond-required.html">依赖必填</a>
+      <a class="active" href="rules.html">验证规则</a>
+      <a href="call.html">自定义验证规则</a>
+      <a href="index.html">搭配对话框插件</a>
+      <a href="message.html">自定义提示信息</a>
+    </nav>
+
+    <h2>示例</h2>
+
+    <form action="?" method="get" id="test_form">
+      <fieldset>
+        <legend>minSize[int], maxSize[int]</legend>
+        <p>
+          <input type="text" size="30" placeholder="最少 3 个字符" data-validation="minSize[3]" data-validation-title="minSize">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="最多 10 个字符" data-validation="maxSize[10]" data-validation-title="maxSize">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>min[int], max[int]</legend>
+        <p>
+          <input type="text" size="30" placeholder="数值最小为 3" data-validation="min[3]" data-validation-title="min">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="数值最大为 10" data-validation="max[10]" data-validation-title="max">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>integer, number</legend>
+        <p>
+          <input type="text" size="30" placeholder="输入整数" data-validation="integer" data-validation-title="integer">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="输入数值" data-validation="number" data-validation-title="number">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>only</legend>
+        <h4>onlyNumber</h4>
+        <p>
+          <input type="text" size="30" placeholder="只能输入数字 (0-9)" data-validation="onlyNumber" data-validation-title="onlyNumber">
+        </p>
+        <h4>onlyNumberSp</h4>
+        <p>
+          <input type="text" size="30" placeholder="只能输入数字和空格" data-validation="onlyNumberSp" data-validation-title="onlyNumberSp">
+        </p>
+        <h4>onlyLetter</h4>
+        <p>
+          <input type="text" size="30" placeholder="只能输入英文字母" data-validation="onlyLetter" data-validation-title="onlyLetter">
+        </p>
+        <h4>onlyLetterSp</h4>
+        <p>
+          <input type="text" size="30" placeholder="只能输入英文字母和空格" data-validation="onlyLetterSp" data-validation-title="onlyLetterSp">
+        </p>
+        <h4>onlyLetterNumber</h4>
+        <p>
+          <input type="text" size="30" placeholder="只能输入英文字母和数字" data-validation="onlyLetterNumber" data-validation-title="onlyLetterNumber">
+        </p>
+        <h4>onlyLetterNumberSp</h4>
+        <p>
+          <input type="text" size="30" placeholder="只能输入英文字母、数字、空格" data-validation="onlyLetterNumberSp" data-validation-title="onlyLetterNumberSp">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>email, phone, url</legend>
+        <p>
+          <input type="text" size="30" placeholder="输入电子邮件地址" data-validation="email" data-validation-title="email">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="输入电话号码" data-validation="phone" data-validation-title="phone">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="输入网址" data-validation="url" data-validation-title="url">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>chinese, chinaId, chinaIdLoose</legend>
+        <p>
+          <input type="text" size="30" placeholder="输入中文" data-validation="chinese" data-validation-title="chinese">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="输入身份证号码" data-validation="chinaId" data-validation-title="chinaId">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="输入身份证号码（兼容 15 位）" data-validation="chinaIdLoose" data-validation-title="chinaIdLoose">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>chinaZip, qq</legend>
+        <p>
+          <input type="text" size="30" placeholder="输入邮政编码" data-validation="chinaZip" data-validation-title="chinaZip">
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="输入 QQ 号码" data-validation="qq" data-validation-title="qq">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+    </form>
+
+    <div class="about">
+      <section>
+        <h2>文档</h2>
+        <p><a target="_blank" href="https://github.com/ciaoca/cxValidation">Github</a></p>
+      </section>
+      <section>
+        <h2>作者</h2>
+        <p><a target="_blank" href="http://ciaoca.com/">Ciaoca</a></p>
+      </section>
+      <section>
+        <h2>协议</h2>
+        <p>Released under the MIT license</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="//cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script> -->
+<script src="//cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script src="../js/cxvalidation.js"></script>
+<script>
+cxValidation.attach(document.getElementById('test_form'), {
+  // validMessage: {
+  //   required: '不能为空'
+  // }
+});
+</script>
+</body>
+</html>

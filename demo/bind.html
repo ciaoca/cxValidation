@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cxValidation 表单验证 - 必填</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="../css/demo.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>cxValidation 移动端表单验证</h1>
+  </div>
+</header>
+<div class="main">
+  <div class="wrap">
+    <nav>
+      <a href="required.html">必填</a>
+      <a href="group-required.html">群组必填</a>
+      <a href="cond-required.html">依赖必填</a>
+      <a href="rules.html">验证规则</a>
+      <a href="call.html">自定义验证规则</a>
+      <a href="index.html">搭配对话框插件</a>
+      <a href="message.html">自定义提示信息</a>
+      <a class="active" href="message.html">绑定表单</a>
+    </nav>
+
+    <h2>必填</h2>
+
+    <form action="?" method="get" id="test_form">
+      <fieldset>
+        <blockquote>※ 请打开控制台查看</blockquote>
+
+        <legend>required</legend>
+        <p>
+          <label></label>
+        </p>
+        <p>
+          <input type="text" size="30" placeholder="text" data-validation="required">
+        </p>
+        <p>
+          <input type="password" size="30" placeholder="password" data-validation="required">
+        </p>
+
+        <button type="submit">提交</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>操作</legend>
+        <section id="acts" class="acts">
+          <a href="javascript://" rel="attach">绑定到表单</a>
+          <a href="javascript://" rel="detach">解除绑定</a>
+          <a href="javascript://" rel="valid">获取表单验证结果</a>
+        </section>
+      </fieldset>
+    </form>
+
+    <div class="about">
+      <section>
+        <h2>文档</h2>
+        <p><a target="_blank" href="https://github.com/ciaoca/cxValidation">Github</a></p>
+      </section>
+      <section>
+        <h2>作者</h2>
+        <p><a target="_blank" href="http://ciaoca.com/">Ciaoca</a></p>
+      </section>
+      <section>
+        <h2>协议</h2>
+        <p>Released under the MIT license</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="//cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script> -->
+<script src="//cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script src="../js/cxvalidation.js"></script>
+<script>
+
+(function() {
+  var form = $('#test_form');
+
+  form.on('click', 'a', function(event) {
+    var _this = this;
+    var _rel = _this.rel;
+
+    if (_rel === 'attach') {
+      event.preventDefault();
+      cxValidation.attach(form, {
+        error: function(result) {
+          console.log('未通过', result)
+        },
+        success: function(result) {
+          console.log('通过', result)
+        }
+      });
+      console.log('已绑定到表单提交事件');
+
+    } else if (_rel === 'detach') {
+      event.preventDefault();
+      cxValidation.detach(form);
+      console.log('已解除表单绑定');
+
+    } else if (_rel === 'valid') {
+      event.preventDefault();
+      console.log('结果', cxValidation(form));
+
+    };
+  });
+})();
+</script>
+</body>
+</html>

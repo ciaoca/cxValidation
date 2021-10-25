@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cxValidation 表单验证 - 示例</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="../css/demo.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>cxValidation 移动端表单验证</h1>
+  </div>
+</header>
+<div class="main">
+  <div class="wrap">
+    <nav>
+      <a href="required.html">必填</a>
+      <a href="group-required.html">群组必填</a>
+      <a href="cond-required.html">依赖必填</a>
+      <a href="rules.html">验证规则</a>
+      <a class="active" href="call.html">自定义验证规则</a>
+      <a href="index.html">搭配对话框插件</a>
+      <a href="message.html">自定义提示信息</a>
+    </nav>
+
+    <h2>自定义验证规则</h2>
+
+    <form action="?" method="get" id="test_form">
+      <fieldset>
+        <legend>call[fun][arg1][arg2][..]</legend>
+        <p>
+          <input type="text" size="30" placeholder="填写 ok" data-validation="call[myFunction_1][ok]">
+        </p>
+        <!-- <p>
+          <input type="text" size="30" placeholder="填写 abc" data-validation="call[myFunction_2][abc]">
+        </p> -->
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+    </form>
+
+    <div class="about">
+      <section>
+        <h2>文档</h2>
+        <p><a target="_blank" href="https://github.com/ciaoca/cxValidation">Github</a></p>
+      </section>
+      <section>
+        <h2>作者</h2>
+        <p><a target="_blank" href="http://ciaoca.com/">Ciaoca</a></p>
+      </section>
+      <section>
+        <h2>协议</h2>
+        <p>Released under the MIT license</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="//cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script> -->
+<script src="//cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
+<script src="../js/cxvalidation.js"></script>
+<script>
+cxValidation.attach(document.getElementById('test_form'));
+
+/**
+ * 自定义验证规则: 返回对象
+ * status {boolean} 验证结果
+ * message {string} 提示信息
+ */
+myFunction_1 = function(el, key) {
+  return {
+    status: el.value === key,
+    message: '请填写 ' + key
+  };
+};
+
+/**
+ * 自定义验证规则: 返回 boolean 类型的值
+ * 仅返回验证结果，需要额外进行判断条件和提示
+ */
+myFunction_2 = function(el, key) {
+  return el.value === key;
+};
+</script>
+</body>
+</html>
