@@ -518,7 +518,7 @@
     $.extend(validation.defaults, options);
   };
 
-  cxValidation.setLanguage = function() {
+  cxValidation.setLanguage = function(options) {
     $.extend(true, validation.validMessage, options);
   };
 
