@@ -31,10 +31,10 @@
       <fieldset>
         <legend>call[fun][arg1][arg2][..]</legend>
         <p>
-          <input type="text" size="30" placeholder="填写 ok" data-validation="call[myFunction_1][ok]">
+          <input type="text" size="30" placeholder="填写 ok" data-validation="call[myFunction_1][ok][more]">
         </p>
         <!-- <p>
-          <input type="text" size="30" placeholder="填写 abc" data-validation="call[myFunction_2][abc]">
+          <input type="text" size="30" placeholder="填写 abc" data-validation="call[myFunction_2][abc][more]">
         </p> -->
 
         <button type="submit">验证表单</button>
@@ -58,8 +58,6 @@
   </div>
 </div>
 
-<!-- <script src="//cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script> -->
-<script src="//cdn.staticfile.org/zepto/1.0/zepto.min.js"></script>
 <script src="../js/cxvalidation.js"></script>
 <script>
 cxValidation.attach(document.getElementById('test_form'));
@@ -69,10 +67,11 @@ cxValidation.attach(document.getElementById('test_form'));
  * status {boolean} 验证结果
  * message {string} 提示信息
  */
-myFunction_1 = function(el, key) {
+myFunction_1 = function(el, key1, key2) {
+  console.log(key2);
   return {
-    status: el.value === key,
-    message: '请填写 ' + key
+    status: el.value === key1,
+    message: '请填写 ' + key1
   };
 };
 
@@ -80,8 +79,8 @@ myFunction_1 = function(el, key) {
  * 自定义验证规则: 返回 boolean 类型的值
  * 仅返回验证结果，需要额外进行判断条件和提示
  */
-myFunction_2 = function(el, key) {
-  return el.value === key;
+myFunction_2 = function(el, key1, key2) {
+  return el.value === key1;
 };
 </script>
 </body>

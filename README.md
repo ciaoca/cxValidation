@@ -1,9 +1,5 @@
 # cxValidation
-主要面向移动端的表单验证插件，能快速方便的验证表单和单个输入控件，支持基本的验证规则和自定义验证规则。支持 jQuery 和 Zepto。
-
-**版本：**
-* Zepto v1.0+ | jQuery v1.7+
-* cxValidation 1.0
+主要面向移动端的表单验证插件，能快速方便的验证表单和单个输入控件，支持基本的验证规则和自定义验证规则。
 
 Demo: http://ciaoca.github.io/cxValidation/
 
@@ -13,26 +9,29 @@ Demo: http://ciaoca.github.io/cxValidation/
 
 ### 载入 JavaScript 文件
 ```html
-<script src="zepto.js"></script>
 <script src="cxvalidation.js"></script>
 ```
 
 ### 调用
 ```javascript
-// 获取验证结果(boolean) return: true/false
-cxValidation(document.getElementById('input_id'));
-cxValidation(document.getElementById('form_id'));
+/**
+ * 获取验证结果
+ * @returns {object} result
+ */
+cxValidation(document.getElementById('input_or_form'));
 
-// 获取验证结果(object) return: result
-cxValidation(document.getElementById('input_id'), true);
-cxValidation(document.getElementById('form_id'), true);
+// 检验并提示
+cxValidation.verify(document.getElementById('input_or_form'));
+
+// 绑定表单的提交事件，验证通过后才会提交
+cxValidation.attach(document.getElementById('form'));
 ```
 
 ### result 验证结果
 名称 | 类型 | 说明
 --- | ---| ---
 status | boolean | 验证结果
-message | string | 提示消息 
+message | string | 提示消息
 rule | string | 验证未通过的的规则名称
 element | dom | 验证未通过的元素
 
@@ -42,40 +41,13 @@ element | dom | 验证未通过的元素
 
 名称 | 说明
 --- | ---
-attach(dom, options) | 绑定表单验证
+verify(dom, [options]) | 检验并提示
+attach(dom, [options]) | 绑定表单验证
 detach(dom) | 解除表单验证
 setOptions(options) | 设置默认配置
 setLanguage(object) | 设置默认语言
 
-
-### options 参数说明
-
-名称 | 默认值 | 说明
---- | ---| ---
-complete | undefined | 验证完成时回调函数
-success | function | 验证通过时回调函数
-error | function | 验证未通过时回调函数
-
 ```javascript
-// 绑定表单的提交事件，验证通过后才会提交
-cxValidation.attach(document.getElementById('form_id'));
-
-// 自定义表单验证完成后的处理方式
-cxValidation.attach(document.getElementById('form_id'), {
-  // 验证完成
-  complete: function(result) {
-    console.log('验证完成', result);
-  },
-  // 验证通过（定义该函数后，验证通过后表单将不会触发提交）
-  success: function(result) {
-    console.log('验证通过', result);
-  },
-  // 验证未通过（主要用于展示提示信息）
-  error: function(result) {
-    console.log('验证未通过', result);
-  }
-});
-
 // 表单验证未通过时，默认处理方法，建议搭配对话框插件进行提示
 cxValidation.setOptions({
   error: function(result) {
@@ -91,12 +63,41 @@ cxValidation.setLanguage({
   },
   required: {
     input: '必填项'
+  },
+  email: '请填写正确的邮箱地址'
+});
+```
+
+
+### options 参数说明
+
+名称 | 默认值 | 说明
+--- | ---| ---
+complete | undefined | 验证完成时回调函数
+success | function | 验证通过时回调函数
+error | function | 验证未通过时回调函数
+
+```javascript
+
+// 自定义表单验证完成后的处理方式
+cxValidation.attach(document.getElementById('form'), {
+  // 验证完成
+  complete: function(result) {
+    console.log('验证完成', result);
+  },
+  // 验证通过（定义该函数后，验证通过后表单将阻止提交）
+  success: function(result) {
+    console.log('验证通过', result);
+  },
+  // 验证未通过（用于展示提示信息）
+  error: function(result) {
+    console.log('验证未通过', result);
   }
 });
 ```
 
 
-## `attach()` 绑定表单默认处理逻辑
+### `attach()` 绑定表单默认处理逻辑
 
 #### 验证通过时
 > 触发表单提交。
@@ -104,7 +105,7 @@ cxValidation.setLanguage({
 #### 验证未通过时
 
 > 若规则为 `required` 或 `condRequired` 时，对应的输入框获取光标焦点。  
-> 其他规则，则使用 alert 进行提示。
+> 其他规则，则使用 `alert` 进行提示。
 
 
 

@@ -1,37 +1,45 @@
 /*!
  * cxValidation
  * 
- * @version 1.0.0
+ * @version 1.1.0
  * @author ciaoca
  * @email ciaoca@gmail.com
  * @site https://github.com/ciaoca/cxValidation
  * @license Released under the MIT license
  */
-(function(window, undefined) {
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.cxValidation = factory();
+  };
+}(typeof self !== 'undefined' ? self : this, function() {
   'use strict';
 
   var validation = {
     validMessage: {
       titleSymbol: {
         before: '【',
-        after: '】',
+        after: '】'
       },
       required: {
         input: '未填写',
         radio: '未选择',
         checkbox: '未勾选',
-        select: '未选择',
+        select: '未选择'
       },
       groupRequired: {
         input: '至少填写 {{1}} 项',
         radio: '未选择',
-        checkbox: '至少选择 {{1}} 项',
+        checkbox: '至少选择 {{1}} 项'
       },
       condRequired: {
         input: '未填写',
         radio: '未选择',
         checkbox: '未勾选',
-        select: '未选择',
+        select: '未选择'
       },
       equals: '两次输入内容不一致',
       minSize: '最少 {{0}} 个字符',
@@ -69,12 +77,6 @@
         return (o && o.nodeType && o.nodeType === 1) ? true : false;
       };
     },
-    isJquery: function(o){
-      return (o && o.length && (typeof jQuery === 'function' || typeof jQuery === 'object') && o instanceof jQuery) ? true : false;
-    },
-    isZepto: function(o){
-      return (o && o.length && (typeof Zepto === 'function' || typeof Zepto === 'object') && Zepto.zepto.isZ(o)) ? true : false;
-    },
     isHidden: function(o) {
       if (this.isElement(o)) {
         var style = window.getComputedStyle(o);
@@ -100,7 +102,7 @@
         var nodeName = result.element.nodeName.toLowerCase();
 
         if (result.rule === 'required' || result.rule === 'condRequired') {
-          if (nodeName === 'input' && ['radio','checkbox','color','range','file'].indexOf(result.element.type) >= 0) {
+          if (nodeName === 'input' && ['radio','checkbox','color','range','file','hidden'].indexOf(result.element.type) >= 0) {
             self.toMessage(result.message);
           } else {
             self.toFocus(result.element);
@@ -300,9 +302,9 @@
   // 获取错误提示信息
   validation.getMessage = function(el, rule) {
     var self = this;
+    var nodeName = el.nodeName.toLowerCase();
     var message = '';
     var args;
-    var nodeName = el.nodeName.toLowerCase();
 
     if (typeof el.dataset.validationMessage === 'string' && el.dataset.validationMessage.length) {
       try {
@@ -356,20 +358,19 @@
   };
 
   // 验证单个控件
-  validation.validItem = function(el, reType) {
+  validation.validItem = function(el, options) {
     var self = this;
-    var result = $.extend({}, self.result);
+    var result = Object.assign({}, self.result);
     var ruleStr = el.dataset.validation;
     var ruleArr = [];
     var ruleOpt;
     var args;
     var rule;
 
+    options = Object.assign({}, options);
+
     if (typeof ruleStr === 'string' && ruleStr.length) {
       ruleArr = ruleStr.replace(/\s|\[[^\]]*\]/g, '').split(',');
-
-      // console.log(ruleStr);
-      // console.log(ruleArr);
 
       for (var i = 0, l = ruleArr.length; i < l; i++) {
         rule = ruleArr[i];
@@ -382,9 +383,6 @@
             args = args.concat(ruleOpt[1].match(/([^\[\]]+)/g));
           };
 
-          // console.log(ruleOpt);
-          // console.log(args);
-
           result = self.validFun[rule].apply(self, args);
 
           if (typeof result === 'boolean') {
@@ -393,7 +391,7 @@
             };
           };
 
-          if ($.isPlainObject(result) && typeof result.status === 'boolean') {
+          if (typeof result === 'object' && typeof result.status === 'boolean') {
             if (result.status === false) {
               result.rule = rule;
 
@@ -410,39 +408,35 @@
 
     result.element = el;
 
-    return reType === true ? result : result.status;
+    if (typeof options.complete === 'function') {
+      options.complete(result);
+    };
+
+    if (result.status === true && typeof options.success === 'function') {
+      options.success(result);
+    } else if (result.status === false && typeof options.error === 'function') {
+      options.error(result);
+    };
+
+    return result;
   };
 
   // 验证整个表单
-  validation.validForm = function(form, options, errorCallback) {
+  validation.validForm = function(form, options) {
     var self = this;
-    var result = $.extend({}, self.result);
-    var reType = 'boolean';
+    var result = Object.assign({}, self.result);
+    var inputs;
 
-    if (options === true) {
-      reType = 'object';
-
-    } else if (typeof options === 'function') {
-      options = {
-        success: options
-      };
-    };
-
-    options = $.extend({}, options);
-
-    if (typeof errorCallback === 'function') {
-      options.error = errorCallback;
-    };
-
-    var inputs = form.querySelectorAll('input,textarea,select');
+    options = Object.assign({}, options);
+    inputs = form.querySelectorAll('input,textarea,select');
     self.groupCache = {};
 
-    $.each(inputs, function(index, item) {
-      var itemResult = self.validItem(item, true);
+    for (var i = 0, l = inputs.length; i < l; i++) {
+      var itemResult = self.validItem(inputs[i]);
 
       if (itemResult && itemResult.status === false) {
         result.status = false;
-        result.element = item;
+        result.element = inputs[i];
 
         if (typeof itemResult.rule === 'string' && itemResult.rule.length) {
           result.rule = itemResult.rule;
@@ -452,9 +446,9 @@
           result.message = itemResult.message;
         };
 
-        return false;
+        break;
       };
-    });
+    };
 
     if (result && result.status === true) {
       for (var alias in self.groupCache) {
@@ -468,8 +462,8 @@
       };
     };
 
-    self.groupCache = {};
     result.form = form;
+    self.groupCache = {};
 
     if (typeof options.complete === 'function') {
       options.complete(result);
@@ -481,28 +475,23 @@
       options.error(result);
     };
 
-    return reType === 'object' ? result : result.status;
+    return result;
   };
 
   // 表单提交方法
   validation.formSubmitFn = function(form, options) {
     event.preventDefault();
-    var self = this;
-    options = $.extend({}, self.defaults, options);
-    self.validForm(form, options);
+    this.validForm(form, Object.assign({}, this.defaults, options));
   };
 
   // 提示信息
   validation.toMessage = function(message) {
-    var self = this;
     alert(message);
   };
 
   // 元素获取焦点
   validation.toFocus = function(el) {
-    var self = this;
-
-    if (self.isVisible(el)) {
+    if (this.isVisible(el)) {
       el.focus();
     };
   };
@@ -515,23 +504,35 @@
   };
 
   cxValidation.setOptions = function(options) {
-    $.extend(validation.defaults, options);
+    Object.assign(validation.defaults, options);
   };
 
   cxValidation.setLanguage = function(options) {
-    $.extend(true, validation.validMessage, options);
+    for (var x in options) {
+      if (typeof options[x] === 'object') {
+        if (validation.validMessage.hasOwnProperty(x)) {
+          Object.assign(validation.validMessage[x], options[x]);
+        } else {
+          validation.validMessage[x] = Object.assign({}, options[x]);
+        };
+      } else {
+        validation.validMessage[x] = options[x];
+      };
+    };
   };
 
-  cxValidation.valid = function(el, reType) {
-    if (validation.isJquery(el) || validation.isZepto(el)) {
-      el = el[0];
-    };
-
+  cxValidation.valid = function(el, options) {
     if (!validation.isElement(el)) {
-      return false;
+      return;
     };
 
-    return el.nodeName.toLowerCase() === 'form' ? validation.validForm(el, reType) : validation.validItem(el, reType);
+    return el.nodeName.toLowerCase() === 'form' ? validation.validForm(el, options) : validation.validItem(el, options);
+  };
+
+  // 检验并提示
+  cxValidation.verify = function(el, options) {
+    options = Object.assign({}, validation.defaults, options);
+    this.valid(el, options);
   };
 
   // 绑定到表单
@@ -539,33 +540,24 @@
     var self = this;
     var form;
     var options = {};
+    var alias;
 
     // 分配参数
     for (var i = 0, l = arguments.length; i < l; i++) {
       if (validation.isElement(arguments[i])) {
         form = arguments[i];
 
-      } else if (validation.isJquery(arguments[i]) || validation.isZepto(arguments[i])) {
-        form = arguments[i][0];
-
-      } else if (typeof arguments[i] === 'function') {
-        if (typeof options.success === 'function') {
-          options.error = arguments[i];
-        } else {
-          options.success = arguments[i];
-        };
-
       } else if (typeof arguments[i] === 'object') {
-        options = $.extend(options, arguments[i]);
+        options = Object.assign(options, arguments[i]);
       };
     };
 
     if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
       console.warn('[cxValidation] Not form element.');
-      return false;
+      return;
     };
 
-    var alias = form.dataset.cxVid;
+    alias = form.dataset.cxVid;
 
     if (typeof validation.formFuns[alias] !== 'function') {
       alias = 'cxValid_' + validation.vid;
@@ -583,25 +575,22 @@
   // 解除表单绑定
   cxValidation.detach = function(form) {
     var self = this;
-
-    if (validation.isJquery(form) || validation.isZepto(form)) {
-      form = form[0];
-    };
+    var alias;
 
     if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
-      return false;
+      return;
     };
 
-    var alias = form.dataset.cxVid;
+    alias = form.dataset.cxVid;
     delete form.dataset.cxVid;
 
     if (!alias || typeof validation.formFuns[alias] !== 'function') {
-      return false;
+      return;
     };
 
     form.removeEventListener('submit', validation.formFuns[alias]);
     delete validation.formFuns[alias];
   };
 
-  $.cxValidation = window.cxValidation = cxValidation;
-})(window);
+  return cxValidation;
+}));
