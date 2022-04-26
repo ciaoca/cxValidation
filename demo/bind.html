@@ -22,7 +22,7 @@
       <a href="call.html">自定义验证规则</a>
       <a href="index.html">搭配对话框插件</a>
       <a href="message.html">自定义提示信息</a>
-      <a class="active" href="message.html">绑定表单</a>
+      <a class="active" href="bind.html">绑定表单</a>
     </nav>
 
     <h2>必填</h2>
@@ -76,13 +76,14 @@
 <script>
 
 (function() {
-  var form = $('#test_form');
+  var form = document.getElementById('test_form');
 
-  form.on('click', 'a', function(event) {
-    var _this = this;
-    var _rel = _this.rel;
+  form.addEventListener('click', function(e) {
+    const el = e.target;
+    const nodeName = el.nodeName;
+    const rel = el.rel;
 
-    if (_rel === 'attach') {
+    if (rel === 'attach') {
       event.preventDefault();
       cxValidation.attach(form, {
         error: function(result) {
@@ -94,12 +95,12 @@
       });
       console.log('已绑定到表单提交事件');
 
-    } else if (_rel === 'detach') {
+    } else if (rel === 'detach') {
       event.preventDefault();
       cxValidation.detach(form);
       console.log('已解除表单绑定');
 
-    } else if (_rel === 'valid') {
+    } else if (rel === 'valid') {
       event.preventDefault();
       console.log('结果', cxValidation(form));
 

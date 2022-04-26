@@ -23,7 +23,7 @@
       <a href="call.html">自定义验证规则</a>
       <a href="index.html">搭配对话框插件</a>
       <a class="active" href="message.html">自定义提示信息</a>
-      <a href="message.html">绑定表单</a>
+      <a href="bind.html">绑定表单</a>
     </nav>
 
     <h2>搭配对话框插件</h2>
@@ -75,7 +75,7 @@ $.cxDialog.defaults.title = '提示';
 
 cxValidation.setOptions({
   error: function(result) {
-    var nodeName = result.element.nodeName.toLowerCase();
+    const nodeName = result.element.nodeName.toLowerCase();
 
     $.cxDialog({
       info: result.message,
