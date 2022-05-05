@@ -7,27 +7,38 @@ Demo: http://ciaoca.github.io/cxValidation/
 
 ## 使用方法
 
-### 载入 JavaScript 文件
+### 浏览器端引入
 ```html
 <script src="cxvalidation.js"></script>
 ```
 
-### 调用
+
+
+### 作为模块引入
+
 ```javascript
+import cxValidation from 'cxvalidation';
+```
+
+
+
+### 调用
+
+```javascript
+// 检验表单，若未通过进行提示，通过则提交
+cxValidation.verify(document.getElementById('form'));
+
+// 绑定表单的提交事件，验证通过后才会提交
+cxValidation.attach(document.getElementById('form'));
+
 /**
  * 获取验证结果
  * @returns {object} result
  */
 cxValidation(document.getElementById('input_or_form'));
-
-// 检验并提示
-cxValidation.verify(document.getElementById('input_or_form'));
-
-// 绑定表单的提交事件，验证通过后才会提交
-cxValidation.attach(document.getElementById('form'));
 ```
 
-### result 验证结果
+#### result 验证结果
 名称 | 类型 | 说明
 --- | ---| ---
 status | boolean | 验证结果
@@ -49,7 +60,8 @@ setOptions(options) | 设置默认配置
 setLanguage(options) | 设置默认语言
 
 
-### `verify`, `attach`, `setOptions` 参数说明
+
+### verify, attach, setOptions 的 `options` 参数说明
 
 名称 | 默认值 | 说明
 --- | ---| ---
@@ -58,7 +70,7 @@ success | function | 验证通过时回调函数
 error | function | 验证未通过时回调函数
 
 ```javascript
-// 表单验证未通过时，默认处理方法，建议搭配对话框插件进行提示
+// 设置表单验证未通过时的处理方法（建议搭配对话框插件进行提示）
 cxValidation.setOptions({
   error: function(result) {
     console.log(result);
@@ -82,7 +94,10 @@ cxValidation.attach(document.getElementById('form'), {
 });
 ```
 
+
+
 ### setLanguage 语言配置
+
 ```javascript
 // 自定义提示语言，完整配置可参考源码 validMessage
 cxValidation.setLanguage({
@@ -98,14 +113,16 @@ cxValidation.setLanguage({
 ```
 
 
+
 ### setRules 自定义验证规则
+
 ```html
 <input data-validation="myFun1[arg1][arg2]">
 ```
 
 ```javascript
-// 第一个参数为当前验证的输入控件
 cxValidation.setRules({
+  // 第一个参数 el 为当前验证的输入控件
   myFun1: function(el, arg1, arg2) {
     // 返回验证结果对象
     return {
@@ -114,18 +131,8 @@ cxValidation.setRules({
     };
   },
   myFun2: function(el, arg1, arg2) {...}
-})
+});
 ```
-
-### `attach()` 绑定表单默认处理逻辑
-
-#### 验证通过时
-> 触发表单提交。
-
-#### 验证未通过时
-
-> 若规则为 `required` 或 `condRequired` 时，对应的输入框获取光标焦点。  
-> 其他规则，则使用 `alert` 进行提示。
 
 
 
@@ -200,9 +207,11 @@ chinaId | 验证身份证号码（仅支持 18 位）
 chinaIdLoose | 验证身份证号码（兼容 18 和 15 位）
 chinaZip | 验证邮政编码
 qq | 验证 QQ 号码
-call[funName]\[agr..] | 调用自定义函数验证 [[DEMO]](http://ciaoca.github.io/cxValidation/demo/call.html)（建议改为使用 `setRules` 方法）
+call[funName]\[agr..] | 调用自定义函数验证 [[DEMO]](http://ciaoca.github.io/cxValidation/demo/call.html) 
 
 ### call 自定义验证方法
+
+> 建议改为使用 `setRules` 进行扩展，call 规则只能查找全局方法来使用。
 
 ```html
 <input data-validation="call[myFunction][abc]">
