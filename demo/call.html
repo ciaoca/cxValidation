@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>cxValidation 表单验证 - 示例</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="./css/demo.css">
 </head>
 <body>
 <header>
@@ -20,16 +20,29 @@
       <a href="cond-required.html">依赖必填</a>
       <a href="rules.html">验证规则</a>
       <a class="active" href="call.html">自定义验证规则</a>
-      <a href="index.html">搭配对话框插件</a>
+      <a href="dialog.html">搭配对话框插件</a>
       <a href="message.html">自定义提示信息</a>
       <a href="bind.html">绑定表单</a>
     </nav>
 
     <h2>自定义验证规则</h2>
 
-    <form action="?" method="get" id="test_form">
+    <form action="?" method="get">
+      <fieldset>
+        <legend>ruleName[arg1][arg2][..]</legend>
+        <blockquote>通过 .setRules() 添加自定义验证规则</blockquote>
+        <p>
+          <input type="text" size="30" placeholder="填写 yes" data-validation="privateFun[yes][no]">
+        </p>
+
+        <button type="submit">验证表单</button>
+      </fieldset>
+    </form>
+
+    <form action="?" method="get">
       <fieldset>
         <legend>call[fun][arg1][arg2][..]</legend>
+        <blockquote>该规则会查找全局方法</blockquote>
         <p>
           <input type="text" size="30" placeholder="填写 ok" data-validation="call[myFunction_1][ok][more]">
         </p>
@@ -58,17 +71,31 @@
   </div>
 </div>
 
-<script src="../js/cxvalidation.js"></script>
+<script src="../dist/cxvalidation.js"></script>
 <script>
-cxValidation.attach(document.getElementById('test_form'));
+// 私有方法
+(function() {
+  const privateFun = function(el, key1, key2) {
+    console.log(key1, key2);
+    return {
+      status: el.value === key1,
+      message: '请填写 ' + key1
+    };
+  };
+
+  cxValidation.setRules({
+    privateFun: privateFun
+  })
+})();
+
 
 /**
- * 自定义验证规则: 返回对象
+ * 全局自定义验证规则: 返回对象
  * status {boolean} 验证结果
  * message {string} 提示信息
  */
 myFunction_1 = function(el, key1, key2) {
-  console.log(key2);
+  console.log(key1, key2);
   return {
     status: el.value === key1,
     message: '请填写 ' + key1
@@ -76,12 +103,18 @@ myFunction_1 = function(el, key1, key2) {
 };
 
 /**
- * 自定义验证规则: 返回 boolean 类型的值
+ * 全局自定义验证规则: 返回 boolean 类型的值
  * 仅返回验证结果，需要额外进行判断条件和提示
  */
 myFunction_2 = function(el, key1, key2) {
   return el.value === key1;
 };
+
+(function() {
+  for (let x of document.querySelectorAll('form')) {
+    cxValidation.attach(x);
+  };
+})();
 </script>
 </body>
 </html>

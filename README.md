@@ -33,7 +33,7 @@ cxValidation.attach(document.getElementById('form'));
 status | boolean | 验证结果
 message | string | 提示消息
 rule | string | 验证未通过的的规则名称
-element | dom | 验证未通过的元素
+element | element | 验证未通过的元素
 
 
 
@@ -41,35 +41,15 @@ element | dom | 验证未通过的元素
 
 名称 | 说明
 --- | ---
-verify(dom, [options]) | 检验并提示
-attach(dom, [options]) | 绑定表单验证
-detach(dom) | 解除表单验证
+verify(element, [options]) | 检验并提示
+attach(element, [options]) | 绑定表单验证
+detach(element) | 解除表单验证
+setRules(options) | 设置验证规则
 setOptions(options) | 设置默认配置
-setLanguage(object) | 设置默认语言
-
-```javascript
-// 表单验证未通过时，默认处理方法，建议搭配对话框插件进行提示
-cxValidation.setOptions({
-  error: function(result) {
-    console.log(result);
-  }
-});
-
-// 自定义提示语言，完整配置可参考源码 validMessage
-cxValidation.setLanguage({
-  titleSymbol: {
-    before: '',
-    after: '',
-  },
-  required: {
-    input: '必填项'
-  },
-  email: '请填写正确的邮箱地址'
-});
-```
+setLanguage(options) | 设置默认语言
 
 
-### options 参数说明
+### `verify`, `attach`, `setOptions` 参数说明
 
 名称 | 默认值 | 说明
 --- | ---| ---
@@ -78,6 +58,12 @@ success | function | 验证通过时回调函数
 error | function | 验证未通过时回调函数
 
 ```javascript
+// 表单验证未通过时，默认处理方法，建议搭配对话框插件进行提示
+cxValidation.setOptions({
+  error: function(result) {
+    console.log(result);
+  }
+});
 
 // 自定义表单验证完成后的处理方式
 cxValidation.attach(document.getElementById('form'), {
@@ -96,6 +82,40 @@ cxValidation.attach(document.getElementById('form'), {
 });
 ```
 
+### setLanguage 语言配置
+```javascript
+// 自定义提示语言，完整配置可参考源码 validMessage
+cxValidation.setLanguage({
+  titleSymbol: {
+    before: '',
+    after: '',
+  },
+  required: {
+    input: '必填项'
+  },
+  email: '请填写正确的邮箱地址'
+});
+```
+
+
+### setRules 自定义验证规则
+```html
+<input data-validation="myFun1[arg1][arg2]">
+```
+
+```javascript
+// 第一个参数为当前验证的输入控件
+cxValidation.setRules({
+  myFun1: function(el, arg1, arg2) {
+    // 返回验证结果对象
+    return {
+      status: el.value === arg1,  // true: 通过, false: 未通过
+      message: '请填写 ' + arg1    // 提示信息
+    };
+  },
+  myFun2: function(el, arg1, arg2) {...}
+})
+```
 
 ### `attach()` 绑定表单默认处理逻辑
 
@@ -180,7 +200,7 @@ chinaId | 验证身份证号码（仅支持 18 位）
 chinaIdLoose | 验证身份证号码（兼容 18 和 15 位）
 chinaZip | 验证邮政编码
 qq | 验证 QQ 号码
-call[funName]\[agr..] | 调用自定义函数验证 [[DEMO]](http://ciaoca.github.io/cxValidation/demo/call.html)
+call[funName]\[agr..] | 调用自定义函数验证 [[DEMO]](http://ciaoca.github.io/cxValidation/demo/call.html)（建议改为使用 `setRules` 方法）
 
 ### call 自定义验证方法
 

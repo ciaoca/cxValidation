@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>cxValidation 表单验证 - 必填</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="./css/demo.css">
 </head>
 <body>
 <header>
@@ -20,7 +20,7 @@
       <a href="cond-required.html">依赖必填</a>
       <a href="rules.html">验证规则</a>
       <a href="call.html">自定义验证规则</a>
-      <a href="index.html">搭配对话框插件</a>
+      <a href="dialog.html">搭配对话框插件</a>
       <a href="message.html">自定义提示信息</a>
       <a class="active" href="bind.html">绑定表单</a>
     </nav>
@@ -51,6 +51,7 @@
           <a href="javascript://" rel="attach">绑定到表单</a>
           <a href="javascript://" rel="detach">解除绑定</a>
           <a href="javascript://" rel="valid">获取表单验证结果</a>
+          <a href="javascript://" rel="verify">检验并提示</a>
         </section>
       </fieldset>
     </form>
@@ -72,38 +73,44 @@
   </div>
 </div>
 
-<script src="../js/cxvalidation.js"></script>
+<script src="../dist/cxvalidation.js"></script>
 <script>
 
 (function() {
-  var form = document.getElementById('test_form');
+  const form = document.getElementById('test_form');
 
   form.addEventListener('click', function(e) {
     const el = e.target;
-    const nodeName = el.nodeName;
+    const nodeName = el.nodeName.toLowerCase();
     const rel = el.rel;
 
-    if (rel === 'attach') {
-      event.preventDefault();
-      cxValidation.attach(form, {
-        error: function(result) {
-          console.log('未通过', result)
-        },
-        success: function(result) {
-          console.log('通过', result)
-        }
-      });
-      console.log('已绑定到表单提交事件');
+    if (nodeName === 'a') {
+      if (rel === 'attach') {
+        event.preventDefault();
+        cxValidation.attach(form, {
+          error: function(result) {
+            console.log('未通过', result)
+          },
+          success: function(result) {
+            console.log('通过', result)
+          }
+        });
+        console.log('已绑定到表单提交事件');
 
-    } else if (rel === 'detach') {
-      event.preventDefault();
-      cxValidation.detach(form);
-      console.log('已解除表单绑定');
+      } else if (rel === 'detach') {
+        event.preventDefault();
+        cxValidation.detach(form);
+        console.log('已解除表单绑定');
 
-    } else if (rel === 'valid') {
-      event.preventDefault();
-      console.log('结果', cxValidation(form));
+      } else if (rel === 'valid') {
+        event.preventDefault();
+        console.log('结果', cxValidation(form));
 
+      } else if (rel === 'verify') {
+        event.preventDefault();
+        cxValidation.verify(form);
+
+      };
     };
   });
 })();

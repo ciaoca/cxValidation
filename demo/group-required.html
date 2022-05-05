@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>cxValidation 表单验证 - 示例</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="./css/demo.css">
 </head>
 <body>
 <header>
@@ -20,14 +20,14 @@
       <a href="cond-required.html">依赖必填</a>
       <a href="rules.html">验证规则</a>
       <a href="call.html">自定义验证规则</a>
-      <a href="index.html">搭配对话框插件</a>
+      <a href="dialog.html">搭配对话框插件</a>
       <a href="message.html">自定义提示信息</a>
       <a href="bind.html">绑定表单</a>
     </nav>
 
     <h2>群组必填</h2>
 
-    <form action="?" method="get" id="test_form">
+    <form action="?" method="get">
       <fieldset>
         <legend>groupRequired[key]</legend>
         <blockquote>至少填写 1 项</blockquote>
@@ -46,7 +46,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>groupRequired[key][n]</legend>
         <blockquote>至少选择 2 项</blockquote>
@@ -84,9 +86,13 @@
   </div>
 </div>
 
-<script src="../js/cxvalidation.js"></script>
+<script src="../dist/cxvalidation.js"></script>
 <script>
-cxValidation.attach(document.getElementById('test_form'));
+(function() {
+  for (let x of document.querySelectorAll('form')) {
+    cxValidation.attach(x);
+  };
+})();
 </script>
 </body>
 </html>

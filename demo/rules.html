@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>cxValidation 表单验证 - 示例</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="./css/demo.css">
 </head>
 <body>
 <header>
@@ -20,14 +20,14 @@
       <a href="cond-required.html">依赖必填</a>
       <a class="active" href="rules.html">验证规则</a>
       <a href="call.html">自定义验证规则</a>
-      <a href="index.html">搭配对话框插件</a>
+      <a href="dialog.html">搭配对话框插件</a>
       <a href="message.html">自定义提示信息</a>
       <a href="bind.html">绑定表单</a>
     </nav>
 
     <h2>示例</h2>
 
-    <form action="?" method="get" id="test_form">
+    <form action="?" method="get">
       <fieldset>
         <legend>minSize[int], maxSize[int]</legend>
         <p>
@@ -39,7 +39,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>min[int], max[int]</legend>
         <p>
@@ -51,7 +53,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>integer, number</legend>
         <p>
@@ -63,7 +67,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>only</legend>
         <h4>onlyNumber</h4>
@@ -93,7 +99,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>email, phone, url</legend>
         <p>
@@ -108,7 +116,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>chinese, chinaId, chinaIdLoose</legend>
         <p>
@@ -123,7 +133,9 @@
 
         <button type="submit">验证表单</button>
       </fieldset>
+    </form>
 
+    <form action="?" method="get">
       <fieldset>
         <legend>chinaZip, qq</legend>
         <p>
@@ -154,7 +166,7 @@
   </div>
 </div>
 
-<script src="../js/cxvalidation.js"></script>
+<script src="../dist/cxvalidation.js"></script>
 <script>
 cxValidation.setLanguage({
   titleSymbol: {
@@ -164,7 +176,11 @@ cxValidation.setLanguage({
   email: '请填写正确的邮箱地址',
 });
 
-cxValidation.attach(document.getElementById('test_form'));
+(function() {
+  for (let x of document.querySelectorAll('form')) {
+    cxValidation.attach(x);
+  };
+})();
 </script>
 </body>
 </html>
