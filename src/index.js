@@ -1,54 +1,10 @@
 const validation = {
-  validMessage: {
-    titleSymbol: {
-      before: '【',
-      after: '】'
-    },
-    required: {
-      input: '未填写',
-      radio: '未选择',
-      checkbox: '未勾选',
-      select: '未选择'
-    },
-    groupRequired: {
-      input: '至少填写 {{1}} 项',
-      radio: '未选择',
-      checkbox: '至少选择 {{1}} 项'
-    },
-    condRequired: {
-      input: '未填写',
-      radio: '未选择',
-      checkbox: '未勾选',
-      select: '未选择'
-    },
-    equals: '两次输入内容不一致',
-    minSize: '最少 {{0}} 个字符',
-    maxSize: '最多 {{0}} 个字符',
-    min: '最小值为 {{0}}',
-    max: '最大值为 {{0}}',
-    integer: '无效的整数',
-    number: '无效的数值',
-    onlyNumber: '只能填写数字',
-    onlyNumberSp: '只能填写数字和空格',
-    onlyLetter: '只能填写英文字母',
-    onlyLetterSp: '只能填写英文字母和空格',
-    onlyLetterNumber: '只能填写英文字母与数字',
-    onlyLetterNumberSp: '只能填写英文字母、数字、空格',
-    email: '无效的邮件地址',
-    phone: '无效的电话号码',
-    url: '无效的网址',
-    chinese: '只能填写中文汉字',
-    chinaId: '无效的身份证号码',
-    chinaIdLoose: '无效的身份证号码',
-    chinaZip: '无效的邮政编码',
-    qq: '无效的 QQ 号码'
-  },
   result: {
     status: true
   },
-  vid: 1,
-  formFuns: {},
+  cxId: 1,
   groupCache: {},
+  bindFuns: {},
 
   isElement: function(o){
     if (o && (typeof HTMLElement === 'function' || typeof HTMLElement === 'object') && o instanceof HTMLElement) {
@@ -70,29 +26,50 @@ const validation = {
   },
 };
 
-validation.init = function() {
-  const self = this;
-
-  // 默认表单验证处理逻辑
-  self.defaults = {
-    success: (result) => {
-      result.form.submit();
-    },
-    error: (result) => {
-      const nodeName = result.element.nodeName.toLowerCase();
-
-      if (result.rule === 'required' || result.rule === 'condRequired') {
-        if (nodeName === 'input' && ['radio','checkbox','color','range','file','hidden'].indexOf(result.element.type) >= 0) {
-          self.toMessage(result.message);
-        } else {
-          self.toFocus(result.element);
-        };
-
-      } else {
-        self.toMessage(result.message);
-      };
-    }
-  };
+// 语言配置
+validation.validMessage = {
+  titleSymbol: {
+    before: '【',
+    after: '】'
+  },
+  required: {
+    input: '未填写',
+    radio: '未选择',
+    checkbox: '未勾选',
+    select: '未选择'
+  },
+  groupRequired: {
+    input: '至少填写 {{1}} 项',
+    radio: '未选择',
+    checkbox: '至少选择 {{1}} 项'
+  },
+  condRequired: {
+    input: '未填写',
+    radio: '未选择',
+    checkbox: '未勾选',
+    select: '未选择'
+  },
+  equals: '两次输入内容不一致',
+  minSize: '最少 {{0}} 个字符',
+  maxSize: '最多 {{0}} 个字符',
+  min: '最小值为 {{0}}',
+  max: '最大值为 {{0}}',
+  integer: '无效的整数',
+  number: '无效的数值',
+  onlyNumber: '只能填写数字',
+  onlyNumberSp: '只能填写数字和空格',
+  onlyLetter: '只能填写英文字母',
+  onlyLetterSp: '只能填写英文字母和空格',
+  onlyLetterNumber: '只能填写英文字母与数字',
+  onlyLetterNumberSp: '只能填写英文字母、数字、空格',
+  email: '无效的邮件地址',
+  phone: '无效的电话号码',
+  url: '无效的网址',
+  chinese: '只能填写中文汉字',
+  chinaId: '无效的身份证号码',
+  chinaIdLoose: '无效的身份证号码',
+  chinaZip: '无效的邮政编码',
+  qq: '无效的 QQ 号码'
 };
 
 // 验证方法
@@ -251,6 +228,31 @@ validation.validFun = {
 
     return typeof scope === 'function' ? scope.apply(scope, args) : true;
   }
+};
+
+validation.init = function() {
+  const self = this;
+
+  // 默认表单验证完成的处理逻辑
+  self.defaults = {
+    success: (result) => {
+      result.form.submit();
+    },
+    error: (result) => {
+      const nodeName = result.element.nodeName.toLowerCase();
+
+      if (result.rule === 'required' || result.rule === 'condRequired') {
+        if (nodeName === 'input' && ['radio','checkbox','color','range','file','hidden'].indexOf(result.element.type) >= 0) {
+          self.toMessage(result.message);
+        } else {
+          self.toFocus(result.element);
+        };
+
+      } else {
+        self.toMessage(result.message);
+      };
+    }
+  };
 };
 
 // 获取验证规则参数
@@ -449,12 +451,6 @@ validation.validForm = function(form, options) {
   return result;
 };
 
-// 表单提交方法
-validation.formSubmitFn = function(form, options) {
-  event.preventDefault();
-  this.validForm(form, Object.assign({}, this.defaults, options));
-};
-
 // 提示信息
 validation.toMessage = function(message) {
   alert(message);
@@ -464,6 +460,29 @@ validation.toMessage = function(message) {
 validation.toFocus = function(el) {
   if (this.isVisible(el)) {
     el.focus();
+  };
+};
+
+// 表单提交方法
+validation.formSubmitFn = function(form, options) {
+  event.preventDefault();
+  this.validForm(form, Object.assign({}, this.defaults, options));
+};
+
+// 解除绑定
+validation.detach = function(form) {
+  const self = this;
+
+  if (!self.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
+    return;
+  };
+
+  let alias = 'id_' + form.dataset.cxValidationId;
+  delete form.dataset.cxValidationId;
+
+  if (typeof self.bindFuns[alias] === 'function') {
+    form.removeEventListener('submit', self.bindFuns[alias]);
+    delete self.bindFuns[alias];
   };
 };
 
@@ -533,36 +552,23 @@ cxValidation.attach = function() {
     return;
   };
 
-  let alias = form.dataset.cxVid;
+  let alias = 'id_' + form.dataset.cxValidationId;
 
-  if (typeof validation.formFuns[alias] !== 'function') {
-    alias = 'cxValid_' + validation.vid;
-    form.dataset.cxVid = alias;
-    validation.vid++;
-  } else {
-    form.removeEventListener('submit', validation.formFuns[alias]);
+  if (typeof validation.bindFuns['id_' + alias] === 'function') {
+    this.detach(form);
   };
 
-  validation.formFuns[alias] = validation.formSubmitFn.bind(validation, form, options);
+  form.dataset.cxValidationId = validation.cxId;
+  alias = 'id_' + validation.cxId;
+  validation.cxId++;
+  validation.bindFuns[alias] = validation.formSubmitFn.bind(validation, form, options);
 
-  form.addEventListener('submit', validation.formFuns[alias]);
+  form.addEventListener('submit', validation.bindFuns[alias]);
 };
 
 // 解除表单绑定
 cxValidation.detach = function(form) {
-  if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
-    return;
-  };
-
-  let alias = form.dataset.cxVid;
-  delete form.dataset.cxVid;
-
-  if (!alias || typeof validation.formFuns[alias] !== 'function') {
-    return;
-  };
-
-  form.removeEventListener('submit', validation.formFuns[alias]);
-  delete validation.formFuns[alias];
+  validation.detach(form);
 };
 
 export default cxValidation;
