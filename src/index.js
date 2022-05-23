@@ -1,4 +1,4 @@
-const validation = {
+const theTool = {
   result: {
     status: true
   },
@@ -27,7 +27,7 @@ const validation = {
 };
 
 // 语言配置
-validation.validMessage = {
+theTool.validMessage = {
   titleSymbol: {
     before: '【',
     after: '】'
@@ -73,7 +73,7 @@ validation.validMessage = {
 };
 
 // 验证方法
-validation.validFun = {
+theTool.validFun = {
   required: function(el) {
     if (el.type === 'checkbox' || el.type === 'radio') {
       return el.checked ? true : false;
@@ -230,7 +230,7 @@ validation.validFun = {
   }
 };
 
-validation.init = function() {
+theTool.init = function() {
   const self = this;
 
   // 默认表单验证完成的处理逻辑
@@ -256,7 +256,7 @@ validation.init = function() {
 };
 
 // 获取验证规则参数
-validation.getRuleArguments = function(el, rule) {
+theTool.getRuleArguments = function(el, rule) {
   const ruleStr = el.dataset.validation;
   let ruleArr = [];
   let args = [];
@@ -266,7 +266,7 @@ validation.getRuleArguments = function(el, rule) {
   };
 
   if (typeof rule === 'string' && rule.length && ruleArr.indexOf(rule) >= 0) {
-    let ruleOpt = ruleStr.match(new RegExp(rule + '((\\[[^\\]]+\\])+)'));
+    const ruleOpt = ruleStr.match(new RegExp(rule + '((\\[[^\\]]+\\])+)'));
 
     if (Array.isArray(ruleOpt) && ruleOpt.length > 1) {
       args = ruleOpt[1].match(/([^\[\]]+)/g);
@@ -281,7 +281,7 @@ validation.getRuleArguments = function(el, rule) {
 };
 
 // 获取错误提示信息
-validation.getMessage = function(el, rule) {
+theTool.getMessage = function(el, rule) {
   const self = this;
   const nodeName = el.nodeName.toLowerCase();
   let message = '';
@@ -327,9 +327,9 @@ validation.getMessage = function(el, rule) {
   };
 
   if (message.length) {
-    let args = self.getRuleArguments(el, rule);
+    const args = self.getRuleArguments(el, rule);
 
-    for (var i = 0, l = args.length; i < l; i++) {
+    for (let i = 0, l = args.length; i < l; i++) {
       message = message.replace(new RegExp('\\{\\{' + i + '\\}\\}'), args[i]);
     };
   };
@@ -338,10 +338,10 @@ validation.getMessage = function(el, rule) {
 };
 
 // 验证单个控件
-validation.validItem = function(el, options) {
+theTool.validItem = function(el, options) {
   const self = this;
-  let result = Object.assign({}, self.result);
   const ruleStr = el.dataset.validation;
+  let result = Object.assign({}, self.result);
 
   options = Object.assign({}, options);
 
@@ -350,7 +350,7 @@ validation.validItem = function(el, options) {
 
     for (let x of ruleArr) {
       if (typeof self.validFun[x] === 'function') {
-        let ruleOpt = ruleStr.match(new RegExp(x + '((\\[[^\\]]+\\])+)'));
+        const ruleOpt = ruleStr.match(new RegExp(x + '((\\[[^\\]]+\\])+)'));
         let args = [el];
 
         if (Array.isArray(ruleOpt) && ruleOpt.length > 1) {
@@ -396,10 +396,10 @@ validation.validItem = function(el, options) {
 };
 
 // 验证整个表单
-validation.validForm = function(form, options) {
+theTool.validForm = function(form, options) {
   const self = this;
   const result = Object.assign({}, self.result);
-  let inputs = form.querySelectorAll('input,textarea,select');
+  const inputs = form.querySelectorAll('input,textarea,select');
 
   options = Object.assign({}, options);
   self.groupCache = {};
@@ -452,32 +452,32 @@ validation.validForm = function(form, options) {
 };
 
 // 提示信息
-validation.toMessage = function(message) {
+theTool.toMessage = function(message) {
   alert(message);
 };
 
 // 元素获取焦点
-validation.toFocus = function(el) {
+theTool.toFocus = function(el) {
   if (this.isVisible(el)) {
     el.focus();
   };
 };
 
 // 表单提交方法
-validation.formSubmitFn = function(form, options) {
+theTool.formSubmitFn = function(form, options) {
   event.preventDefault();
   this.validForm(form, Object.assign({}, this.defaults, options));
 };
 
 // 解除绑定
-validation.detach = function(form) {
+theTool.detach = function(form) {
   const self = this;
 
   if (!self.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
     return;
   };
 
-  let alias = 'id_' + form.dataset.cxValidationId;
+  const alias = 'id_' + form.dataset.cxValidationId;
   delete form.dataset.cxValidationId;
 
   if (typeof self.bindFuns[alias] === 'function') {
@@ -486,7 +486,7 @@ validation.detach = function(form) {
   };
 };
 
-validation.init();
+theTool.init();
 
 
 const cxValidation = function(){
@@ -494,19 +494,19 @@ const cxValidation = function(){
 };
 
 cxValidation.setOptions = function(options) {
-  Object.assign(validation.defaults, options);
+  Object.assign(theTool.defaults, options);
 };
 
 cxValidation.setLanguage = function(options) {
   for (let x in options) {
     if (typeof options[x] === 'object') {
-      if (validation.validMessage.hasOwnProperty(x)) {
-        Object.assign(validation.validMessage[x], options[x]);
+      if (theTool.validMessage.hasOwnProperty(x)) {
+        Object.assign(theTool.validMessage[x], options[x]);
       } else {
-        validation.validMessage[x] = Object.assign({}, options[x]);
+        theTool.validMessage[x] = Object.assign({}, options[x]);
       };
     } else {
-      validation.validMessage[x] = options[x];
+      theTool.validMessage[x] = options[x];
     };
   };
 };
@@ -514,22 +514,22 @@ cxValidation.setLanguage = function(options) {
 cxValidation.setRules = function(options) {
   for (let x in options) {
     if (typeof options[x] === 'function') {
-      validation.validFun[x] = options[x].bind();
+      theTool.validFun[x] = options[x].bind();
     };
   };
 };
 
 cxValidation.valid = function(el, options) {
-  if (!validation.isElement(el)) {
+  if (!theTool.isElement(el)) {
     return;
   };
 
-  return el.nodeName.toLowerCase() === 'form' ? validation.validForm(el, options) : validation.validItem(el, options);
+  return el.nodeName.toLowerCase() === 'form' ? theTool.validForm(el, options) : theTool.validItem(el, options);
 };
 
 // 检验并提示
 cxValidation.verify = function(el, options) {
-  this.valid(el, Object.assign({}, validation.defaults, options));
+  this.valid(el, Object.assign({}, theTool.defaults, options));
 };
 
 // 绑定到表单
@@ -539,7 +539,7 @@ cxValidation.attach = function() {
 
   // 分配参数
   for (let x of arguments) {
-    if (validation.isElement(x)) {
+    if (theTool.isElement(x)) {
       form = x;
 
     } else if (typeof x === 'object') {
@@ -547,28 +547,28 @@ cxValidation.attach = function() {
     };
   };
 
-  if (!validation.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
+  if (!theTool.isElement(form) || !form.nodeName || form.nodeName.toLowerCase() !== 'form') {
     console.warn('[cxValidation] Not form element.');
     return;
   };
 
   let alias = 'id_' + form.dataset.cxValidationId;
 
-  if (typeof validation.bindFuns['id_' + alias] === 'function') {
+  if (typeof theTool.bindFuns['id_' + alias] === 'function') {
     this.detach(form);
   };
 
-  form.dataset.cxValidationId = validation.cxId;
-  alias = 'id_' + validation.cxId;
-  validation.cxId++;
-  validation.bindFuns[alias] = validation.formSubmitFn.bind(validation, form, options);
+  form.dataset.cxValidationId = theTool.cxId;
+  alias = 'id_' + theTool.cxId;
+  theTool.cxId++;
+  theTool.bindFuns[alias] = theTool.formSubmitFn.bind(theTool, form, options);
 
-  form.addEventListener('submit', validation.bindFuns[alias]);
+  form.addEventListener('submit', theTool.bindFuns[alias]);
 };
 
 // 解除表单绑定
 cxValidation.detach = function(form) {
-  validation.detach(form);
+  theTool.detach(form);
 };
 
 export default cxValidation;

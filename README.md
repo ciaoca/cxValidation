@@ -5,7 +5,7 @@ Demo: http://ciaoca.github.io/cxValidation/
 
 
 
-## 使用方法
+## 安装方法
 
 ### 浏览器端引入
 ```html
@@ -14,7 +14,10 @@ Demo: http://ciaoca.github.io/cxValidation/
 
 
 
-### 作为模块引入
+### 从 NPM 安装，作为模块引入
+```shell
+npm install cxvalidation
+```
 
 ```javascript
 import cxValidation from 'cxvalidation';
@@ -22,20 +25,20 @@ import cxValidation from 'cxvalidation';
 
 
 
-### 调用
+### 使用
 
 ```javascript
-// 检验表单，若未通过进行提示，通过则提交
-cxValidation.verify(document.getElementById('form'));
-
-// 绑定表单的提交事件，验证通过后才会提交
-cxValidation.attach(document.getElementById('form'));
-
 /**
  * 获取验证结果
  * @returns {object} result
  */
 cxValidation(document.getElementById('input_or_form'));
+
+// 检验表单，若未通过进行提示，通过则提交
+cxValidation.verify(document.getElementById('form'));
+
+// 绑定表单的提交事件，验证通过后才会提交
+cxValidation.attach(document.getElementById('form'));
 ```
 
 #### result 验证结果
@@ -55,24 +58,29 @@ element | element | 验证未通过的元素
 verify(element, [options]) | 检验并提示
 attach(element, [options]) | 绑定表单验证
 detach(element) | 解除表单验证
-setRules(options) | 设置验证规则
 setOptions(options) | 设置默认配置
 setLanguage(options) | 设置默认语言
+setRules(options) | 设置验证规则
 
 
 
 ### verify, attach, setOptions 的 `options` 参数说明
 
-名称 | 默认值 | 说明
---- | ---| ---
-complete | undefined | 验证完成时回调函数
-success | function | 验证通过时回调函数
-error | function | 验证未通过时回调函数
+名称 | 类型 | 默认值 | 说明
+--- | ---| --- | --- 
+complete | function | undefined | 验证完成时回调函数
+success | function | function | 验证通过时回调函数
+error | function | function | 验证未通过时回调函数
+
+>  备注：
+>
+> 1. `success` 默认行为是触发表单提交。
+> 2. `error`  默认行为是让未通过验证的输入控件获取焦点，或者使用 `alert` 提示信息。
 
 ```javascript
-// 设置表单验证未通过时的处理方法（建议搭配对话框插件进行提示）
+// 设置表单验证未通过时的处理方法（建议搭配其他对话框插件使用）
 cxValidation.setOptions({
-  error: function(result) {
+  error: (result) => {
     console.log(result);
   }
 });
@@ -80,15 +88,15 @@ cxValidation.setOptions({
 // 自定义表单验证完成后的处理方式
 cxValidation.attach(document.getElementById('form'), {
   // 验证完成
-  complete: function(result) {
+  complete: (result) => {
     console.log('验证完成', result);
   },
-  // 验证通过（定义该函数后，验证通过后表单将阻止提交）
-  success: function(result) {
+  // 验证通过（定义该函数后，验证通过后表单也不会提交）
+  success: (result) => {
     console.log('验证通过', result);
   },
   // 验证未通过（用于展示提示信息）
-  error: function(result) {
+  error: (result) => {
     console.log('验证未通过', result);
   }
 });
@@ -140,18 +148,18 @@ cxValidation.setRules({
 
 名称 | 说明
 --- | ---
-data-validation | 验证规则
-data-validation-title | 项目名称（会在提示内容前填充该内容）
+data-validation | 验证规则（多个规则使用 `,` 分隔） 
+data-validation-title | 项目名称（会在提示信息前填充该内容） 
 data-validation-message | 自定义提示消息 [[DEMO]](http://ciaoca.github.io/cxValidation/demo/message.html)<br>设置后会忽略 `data-validation-title` 
 
 
 ```html
-<input data-validation="required" data-validation-title="项目名称" data-validation-message="该项为必填">
+<input data-validation="required" data-validation-title="项目名称">
 <!--
-验证未通过时 result 对象内容：
+验证未通过时的 result 对象
 {
   status: false,
-  message: '【项目名称】该项为必填'
+  message: '【项目名称】未填写'
   rule: 'required',
   element: dom
 }
@@ -165,8 +173,8 @@ data-validation-message | 自定义提示消息 [[DEMO]](http://ciaoca.github.io
 <input data-validation="required,minSize[6]" data-validation-message="验证未通过">
 
 <!--
-根据验证规则提示
-注意：json 格式要求使用双引号，所以外部的需使用单引号
+根据验证规则匹配提示
+注意：JSON 格式要求使用双引号，所以外部需改为单引号
 -->
 <input data-validation="required,minSize[6]" data-validation-message='{"required":"密码不能为空","minSize":"密码安全性太低，不能少于{{0}}位"}'>
 ```
@@ -211,13 +219,14 @@ call[funName]\[agr..] | 调用自定义函数验证 [[DEMO]](http://ciaoca.githu
 
 ### call 自定义验证方法
 
-> 建议改为使用 `setRules` 进行扩展，call 规则只能查找全局方法来使用。
+> 建议改为使用 `setRules` 进行扩展，call 规则只能查找**全局**方法来使用。
 
 ```html
 <input data-validation="call[myFunction][abc]">
 ```
 
 ```javascript
+// 该方法需为全局变量
 var myFunction = function(el, key) {
   return {
     status: el.value === key,
